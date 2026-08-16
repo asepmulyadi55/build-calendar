@@ -104,6 +104,18 @@ importers:
         specifier: 3.2.7
         version: 3.2.7(@types/node@20.19.43)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.23.12)
 
+  packages/calendar-core:
+    devDependencies:
+      '@types/node':
+        specifier: 20.19.43
+        version: 20.19.43
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: 3.2.7
+        version: 3.2.7(@types/node@20.19.43)(jiti@2.7.0)(lightningcss@1.32.0)(tsx@4.23.12)
+
   packages/db:
     dependencies:
       '@prisma/client':

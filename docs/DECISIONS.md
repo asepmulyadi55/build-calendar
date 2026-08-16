@@ -171,6 +171,30 @@ A measurement from the spike is also now load-bearing in production config: `MAL
 
 ---
 
+## ADR-0009 — `calendar-core` returns a serialised Fabric group, not a live one
+
+**Date:** 2026-08 · **Status:** Accepted
+
+**Context.** P1-US-002 requires two things that pull against each other: `renderCalendarGridToFabric(props, scale)` must "produce a Fabric group", and the package must have **zero DOM dependencies** so it runs identically in Node and the browser.
+
+Fabric cannot satisfy both. Its default entry point is the browser build; its `./node` entry pulls in `canvas` and `jsdom`. Importing either inside `calendar-core` would mean the package no longer runs identically in both places — which is the whole point of AR-01.
+
+**Decision.** `renderCalendarGridToFabric` returns Fabric's own **serialised** form — a plain object `{ type: 'Group', objects: [...] }` using Fabric v6 class names (`Group`, `Text`, `Line`, `Rect`, verified against fabric 6.7.1 source). Consumers enliven it:
+
+```ts
+const [group] = await util.enlivenObjects([renderCalendarGridToFabric(props, scale)]);
+```
+
+The package declares no dependencies and no peer dependencies at all. Its `tsconfig.json` omits the DOM lib, so a stray `document` fails typecheck rather than review, and a test asserts the source references no DOM global, imports nothing outside the package, and never reads `Intl` or `process.env`.
+
+Child objects are positioned relative to the group's top-left, with `originX: 'left'` and `originY: 'top'` on every child.
+
+**Consequences.** The editor and the renderer consume the identical JSON, so they cannot diverge — a stronger guarantee than sharing a function that constructs objects differently in each environment. The cost is one `enlivenObjects` call at each call site, and one thing that must be confirmed against real Fabric the first time the editor renders a grid (P1-US-401): that a group built from this JSON positions its children as intended. If Fabric's group-relative coordinate handling requires an adjustment, it is one function, and the tests pin everything else.
+
+A second decision inside the same story: **`fonts.ts` lists exactly the fonts `infra/Dockerfile.renderer` installs today** — the DejaVu and Liberation families, six in total, each annotated with the Debian package that provides it. The interface faces from `design/assets/ds.css` (Archivo, Instrument Sans, IBM Plex Mono) are deliberately absent, because they are not in the image, and a font in the picker but not in the image renders as a silent substitution that a user discovers only in a printed PDF. Adding one is a Dockerfile change plus an image rebuild, and belongs to whichever story first authors a template that needs it.
+
+---
+
 ## Template for new entries
 
 Copy the block below verbatim when adding a decision. It is shown as raw markdown on purpose — so the heading and bold syntax stay visible and copyable rather than rendering as formatting.

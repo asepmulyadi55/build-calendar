@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // No "DOM" and no "node". This package must compile against the language
+    // alone, which is what makes "zero DOM dependencies" enforceable rather
+    // than aspirational: a stray `document` reference fails typecheck.
+    "lib": ["ES2022"],
+    "types": []
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts"]
+}

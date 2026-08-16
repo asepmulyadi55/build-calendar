@@ -5,6 +5,7 @@ pnpm-lock.yaml
 
 # The owner's prose, not our source. Prettier reflows markdown tables and rewraps
 # lists, which turns a one-line spec edit into a hundred-line diff.
+CLAUDE.md
 docs/
 design/
 .claude/

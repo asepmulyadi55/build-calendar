@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // Tests may read the filesystem to enforce the zero-DOM rule; the source
+    // itself may not, which is why this lives in a separate config.
+    "types": ["node"]
+  },
+  "include": ["src/**/*.test.ts", "src/**/*.ts"]
+}
