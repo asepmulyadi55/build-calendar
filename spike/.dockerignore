@@ -1,0 +1,5 @@
+out
+fixtures
+node_modules
+.tmp
+*.md
