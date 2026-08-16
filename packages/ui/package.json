@@ -1,0 +1,13 @@
+{
+  "name": "@buildcalendar/ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./theme.css": "./src/theme.css"
+  },
+  "scripts": {
+    "typecheck": "echo \"no TypeScript in @buildcalendar/ui yet\"",
+    "test": "echo \"no tests in @buildcalendar/ui yet\""
+  }
+}

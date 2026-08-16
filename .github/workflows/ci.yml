@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Every table in `public` must ship with RLS and a deny-all policy.
+      # Without this, a forgotten migration makes a table world-readable through
+      # PostgREST with the anon key (`01-…` §5.3). Do not make this step optional.
+      - name: RLS migration check
+        run: pnpm check:rls
+
+      - name: Prisma client
+        run: pnpm db:generate
+
+      # `pnpm typecheck` is the gate P1-US-001 asks for: CI fails on type errors.
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+        env:
+          # Build-time only. No migration or query runs here; these exist because
+          # Prisma refuses to load without them.
+          DATABASE_URL: postgresql://user:pass@localhost:6543/postgres?pgbouncer=true
+          DIRECT_URL: postgresql://user:pass@localhost:5432/postgres

@@ -1,0 +1,28 @@
+{
+  "name": "@buildcalendar/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "dotenv -e ../../.env -- next dev",
+    "build": "next build",
+    "start": "dotenv -e ../../.env -- next start",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@buildcalendar/db": "workspace:*",
+    "@buildcalendar/ui": "workspace:*",
+    "next": "15.5.23",
+    "react": "19.0.8",
+    "react-dom": "19.0.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "dotenv-cli": "11.0.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3",
+    "vitest": "3.2.7"
+  }
+}

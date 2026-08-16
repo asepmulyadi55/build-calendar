@@ -1,0 +1,14 @@
+node_modules
+.next
+dist
+pnpm-lock.yaml
+
+# The owner's prose, not our source. Prettier reflows markdown tables and rewraps
+# lists, which turns a one-line spec edit into a hundred-line diff.
+docs/
+design/
+.claude/
+spike/
+README.md
+packages/db/prisma/migrations/
+packages/db/generated/

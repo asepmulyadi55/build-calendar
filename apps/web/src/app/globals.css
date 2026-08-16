@@ -1,0 +1,54 @@
+@import 'tailwindcss';
+@import '@buildcalendar/ui/theme.css';
+
+/* Tailwind v4 scans this package's sources by default. The token file lives in
+   another workspace package, so point the scanner at anything that uses it. */
+@source '../../src';
+
+/* Base styles from design/assets/ds.css. Component classes are NOT copied here —
+   components arrive with the stories that need them (P1-US-003). */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-body);
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+
+  /* The paper grain overlay is the signature of the design. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: var(--grain);
+    opacity: 0.55;
+  }
+
+  :focus-visible {
+    outline: 2.5px solid var(--color-merah);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}

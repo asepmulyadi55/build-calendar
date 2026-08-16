@@ -146,6 +146,31 @@ If available hours change materially, revisit this ADR — every date in it is d
 
 ---
 
+## ADR-0008 — Skeleton choices that the specification left open
+
+**Date:** 2026-08 · **Status:** Accepted
+
+**Context.** P1-US-001 specifies the repository's shape but not every tool inside it. Building it surfaced six choices that had to be made one way or the other, each small enough to be invisible later and annoying to reverse.
+
+**Decision.**
+
+1. **pnpm workspaces, no Turborepo.** Four packages and a solo developer. Root scripts fan out with `pnpm -r`. Add a task runner when build times justify it, not before.
+2. **Tailwind v4, tokens in CSS.** `packages/ui/src/theme.css` holds an `@theme` block copied value-for-value from `design/assets/ds.css`. v4 has no `tailwind.config.js`; the CSS *is* the config. Starting on v3 would mean migrating later for nothing.
+3. **The auth bridge uses triggers, not a foreign key.** `public.profiles.id` does not carry an FK to `auth.users`. The auth schema is outside Prisma's datasource, so the constraint would read as schema drift on every `prisma migrate dev`. Two triggers on `auth.users` — insert and delete — give the same guarantee without Prisma trying to drop it. The trigger block is wrapped in a `to_regclass('auth.users') IS NULL` guard, because `prisma migrate dev` replays every migration against a shadow database that has no `auth` schema; unguarded, the migration fails with P3006 and `pnpm db:migrate` never runs at all.
+4. **The skeleton schema is only what the seed needs.** Six tables: `profiles`, `coin_packages`, `product_presets`, `templates`, `holidays`, `settings`. The transactional tables from master spec §8 arrive with the stories that own them, each with RLS in the same migration.
+5. **Only fixed-date holidays are seeded.** Ten rows across two years: Tahun Baru Masehi, Hari Buruh Internasional, Hari Lahir Pancasila, Hari Kemerdekaan Republik Indonesia, Hari Raya Natal. Every other Indonesian public holiday, and all *cuti bersama*, are set by an SKB decree published late in the preceding year. Guessing them would print wrong red dates on a calendar someone paid for. They are imported per year through the admin panel (P1-US-703).
+6. **Seeded templates are inactive.** A template is a Design JSON in R2 (AR-02) and neither `calendar-core` nor those objects exist yet. The rows exist so the shape is real; the admin activates them once a design is uploaded.
+
+**Consequences.** The repository runs from a clean checkout with four commands and no local database. Three things must stay true:
+
+- RLS ships in the same migration as every new table. `pnpm check:rls` fails the build otherwise, and it is verified to catch both a missing `ENABLE ROW LEVEL SECURITY` and a missing deny-all policy.
+- Holiday data is imported before each season, because the seed deliberately does not know it.
+- Both apps read the **root** `.env` through `dotenv-cli`, and Docker Compose is always invoked with `--project-directory .`. Next.js otherwise reads `apps/web/.env` and Compose otherwise reads `infra/.env` — in both cases a missing file is silent, and the process falls back to defaults that look like they work. That failure mode cost real time during this story: the renderer connected to an unrelated Redis on the default port and reported itself healthy.
+
+A measurement from the spike is also now load-bearing in production config: `MALLOC_ARENA_MAX=2` is set in both Dockerfiles. Without it a long-lived Node worker's RSS climbs with every job while the JS heap stays flat (`spike/REPORT.md` §3.1). On a 1 GB box that is the difference between a bounded worker and an OOM kill.
+
+---
+
 ## Template for new entries
 
 Copy the block below verbatim when adding a decision. It is shown as raw markdown on purpose — so the heading and bold syntax stay visible and copyable rather than rendering as formatting.

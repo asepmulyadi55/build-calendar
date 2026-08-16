@@ -1,0 +1,135 @@
+// BuildCalendar database schema.
+//
+// Scope note: this is the P1-US-001 skeleton. It contains only the reference tables
+// the seed needs (`docs/02-phase-1-mvp.md` P1-US-001). The transactional tables from
+// `docs/00-master-spec.md` §8 — coin_transactions, payments, projects, project_assets,
+// export_jobs, orders, addresses, regions, audit_logs — are added by the stories that
+// own them, each with its own migration.
+//
+// Every table added here MUST enable RLS with a deny-all policy in the same migration.
+// `pnpm check:rls` fails the build otherwise. See `01-…` §5.3.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // Pooled connection (PgBouncer, 6543) for the application.
+  url = env("DATABASE_URL")
+  // Direct connection (5432) for migrations. Migrating through the pooler misbehaves.
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  user
+  admin
+
+  @@map("user_role")
+}
+
+enum HolidayType {
+  national
+  joint_leave
+  religious
+  international
+
+  @@map("holiday_type")
+}
+
+/// Bridge to Supabase Auth. `auth.users` is owned by Supabase and is not modelled here;
+/// the foreign key and the insert trigger are added in raw SQL by the migration (§5.4).
+model Profile {
+  id               String    @id @db.Uuid
+  name             String?
+  phone            String?
+  role             UserRole  @default(user)
+  /// Cache only. The ledger in `coin_transactions` is the source of truth (BR-C05).
+  coinBalanceCache Int       @default(0) @map("coin_balance_cache")
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  @@map("profiles")
+}
+
+model CoinPackage {
+  id         String  @id @default(uuid()) @db.Uuid
+  name       String
+  /// Rupiah, integer. Indonesia has no minor unit in practice.
+  priceIdr   Int     @map("price_idr")
+  coinAmount Int     @map("coin_amount")
+  isActive   Boolean @default(true) @map("is_active")
+  sortOrder  Int     @default(0) @map("sort_order")
+  badge      String?
+
+  @@map("coin_packages")
+}
+
+model ProductPreset {
+  id                 String  @id @default(uuid()) @db.Uuid
+  code               String  @unique
+  name               String
+  /// Trim size in millimetres. Bleed is added on every side at export time (AR-04).
+  widthMm            Int     @map("width_mm")
+  heightMm           Int     @map("height_mm")
+  orientation        String
+  sheetCount         Int     @map("sheet_count")
+  monthsPerSheet     Int     @map("months_per_sheet")
+  hasCover           Boolean @default(false) @map("has_cover")
+  bleedMm            Int     @map("bleed_mm")
+  safeMarginMm       Int     @map("safe_margin_mm")
+  unlockCostCoins    Int     @map("unlock_cost_coins")
+  /// Phase 2 (print orders) needs this. 0 until the owner weighs real stock.
+  weightGramPerSheet Int     @default(0) @map("weight_gram_per_sheet")
+  printBasePrice     Int     @default(0) @map("print_base_price")
+  isActive           Boolean @default(true) @map("is_active")
+
+  templates Template[]
+
+  @@map("product_presets")
+}
+
+model Template {
+  id              String  @id @default(uuid()) @db.Uuid
+  name            String
+  slug            String  @unique
+  productPresetId String  @map("product_preset_id") @db.Uuid
+  category        String
+  /// Object-storage keys, never URLs. URLs are signed at request time (AR-07).
+  thumbnailKey    String? @map("thumbnail_key")
+  designKey       String  @map("design_key")
+  slotSchema      Json    @map("slot_schema")
+  isPremium       Boolean @default(false) @map("is_premium")
+  isActive        Boolean @default(false) @map("is_active")
+  sortOrder       Int     @default(0) @map("sort_order")
+
+  productPreset ProductPreset @relation(fields: [productPresetId], references: [id])
+
+  @@index([productPresetId])
+  @@map("templates")
+}
+
+model Holiday {
+  id   String      @id @default(uuid()) @db.Uuid
+  date DateTime    @db.Date
+  /// The official Indonesian name, verbatim. Never translated (master §10.7).
+  name String
+  type HolidayType
+  year Int
+  /// Rendered red in the grid and printed in the legend.
+  isRedDate Boolean  @default(true) @map("is_red_date")
+  source    String?
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@unique([date, name])
+  @@index([year])
+  @@map("holidays")
+}
+
+model Setting {
+  key       String   @id
+  valueJson Json     @map("value_json")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("settings")
+}

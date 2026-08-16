@@ -1,0 +1,104 @@
+# BuildCalendar — full stack.
+#
+# Postgres is deliberately absent. The database is Supabase (remote), so that
+# development hits the real pooler and the real RLS policies from day one
+# (P1-US-001). Never add a local Postgres container.
+#
+# The memory limits are RQ-MEM-06 and are what keeps one runaway container from
+# taking the whole 1 GB box down. Do not raise them without reading
+# `docs/01-tech-stack-and-infrastructure.md` §4.2.
+#
+# ALWAYS run this with the repository root as the project directory:
+#
+#   docker compose --project-directory . -f infra/docker-compose.yml up
+#
+# which is what every `pnpm` script does. Compose resolves both `.env` (for
+# ${VARIABLE} interpolation) and every relative path below against the project
+# directory, not against this file. Run it from `infra/` and REDIS_PORT and
+# friends are silently ignored.
+
+name: buildcalendar
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command:
+      [
+        'redis-server',
+        '--save',
+        '',
+        '--appendonly',
+        'no',
+        '--maxmemory',
+        '48mb',
+        '--maxmemory-policy',
+        'noeviction',
+      ]
+    ports:
+      # Published so `pnpm dev` can reach it from the host. Override REDIS_PORT if
+      # another project already holds 6379.
+      - '${REDIS_PORT:-6379}:6379'
+    mem_limit: 64m
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.web
+    restart: unless-stopped
+    env_file:
+      # Not required, so `docker compose up redis` works on a fresh clone before
+      # .env exists. `web` itself will not start usefully without it.
+      - path: .env
+        required: false
+    environment:
+      REDIS_URL: redis://redis:6379
+      RENDERER_URL: http://renderer:4000
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - '${WEB_PORT:-3000}:3000'
+    mem_limit: 400m
+
+  renderer:
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.renderer
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    # Not published to the host: the renderer is reachable only from `web`
+    # over the Compose network, authenticated with RENDERER_SHARED_SECRET.
+    expose:
+      - '4000'
+    mem_limit: 500m
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - web
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./infra/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    mem_limit: 64m
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,52 @@
+# Renderer worker. Runs under mem_limit 500m (RQ-MEM-06).
+#
+# Chromium and every allowlisted font ship inside this image and are never fetched
+# at render time (`01-…` §5.5). Adding a font to the picker without rebuilding this
+# image is a release blocker.
+FROM node:20-bookworm-slim AS base
+ENV PNPM_HOME=/pnpm PATH=$PNPM_HOME:$PATH
+RUN corepack enable
+WORKDIR /repo
+
+FROM base AS deps
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY apps/web/package.json apps/web/
+COPY apps/renderer/package.json apps/renderer/
+COPY packages/db/package.json packages/db/
+COPY packages/ui/package.json packages/ui/
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+FROM deps AS build
+COPY . .
+RUN pnpm --filter @buildcalendar/renderer build \
+ && pnpm deploy --filter @buildcalendar/renderer --prod /out
+
+FROM node:20-bookworm-slim AS runtime
+ENV NODE_ENV=production
+
+# See spike/REPORT.md §3.1: without this the worker's RSS grows with every job
+# while the JS heap stays flat, because glibc keeps freed native buffers in
+# per-thread arenas. On a 1 GB box this is not optional.
+ENV MALLOC_ARENA_MAX=2
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      chromium \
+      fonts-dejavu-core \
+      fonts-liberation \
+      ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV CHROME_PATH=/usr/bin/chromium \
+    PUPPETEER_SKIP_DOWNLOAD=1
+
+WORKDIR /app
+RUN groupadd --system --gid 1001 nodejs \
+ && useradd --system --uid 1001 --gid nodejs renderer
+
+COPY --from=build --chown=renderer:nodejs /out/node_modules ./node_modules
+COPY --from=build --chown=renderer:nodejs /repo/apps/renderer/dist ./dist
+
+USER renderer
+EXPOSE 4000
+
+CMD ["node", "dist/index.js"]

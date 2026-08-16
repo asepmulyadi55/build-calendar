@@ -1,0 +1,14 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+
+# pnpm 10 blocks lifecycle scripts unless a package is listed here. These need
+# them: Prisma downloads its query engine, esbuild and sharp install a native
+# binary, msgpackr-extract is BullMQ's optional native encoder.
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - esbuild
+  - msgpackr-extract
+  - prisma
+  - sharp

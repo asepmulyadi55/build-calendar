@@ -1,0 +1,103 @@
+/* BuildCalendar design tokens.
+ *
+ * Every value here is copied verbatim from `design/assets/ds.css`, which is the
+ * source of truth for the design (P1-US-003). Nothing in this file is invented.
+ * If a value needs to change, change it in ds.css first, then mirror it here.
+ *
+ * Tailwind v4 turns each `@theme` variable into a utility:
+ *   --color-paper       -> bg-paper, text-paper, border-paper
+ *   --text-lede         -> text-lede
+ *   --spacing-gut       -> p-gut, gap-gut
+ *   --container-page    -> max-w-page
+ *
+ * Light mode only. Dark mode is out of scope (P1-US-003).
+ */
+
+@theme {
+  /* ── Palette ──────────────────────────────────────────────────────────────
+     Paper tones are the background stack, ink tones the text stack,
+     `merah` is the single accent. */
+  --color-paper: #fafaf8;
+  --color-paper-2: #f0f0eb;
+  --color-paper-3: #e8e8e2;
+  --color-ink: #16171b;
+  --color-ink-70: #4a4d55;
+  --color-ink-45: #83868f;
+  --color-ink-25: #b6b8be;
+  --color-rule: #dcdbd4;
+  --color-merah: #d8232a;
+  --color-merah-soft: #fceded;
+  --color-ok: #1f7a4d;
+  --color-warn: #b4761a;
+
+  /* Interaction and component variants, also from ds.css. */
+  --color-merah-hover: #b81c22; /* .btn-primary:hover */
+  --color-ink-hover: #000000; /* .btn-dark:hover */
+  --color-surface: #ffffff; /* .card, .cal, .input, .tbl */
+  --color-ok-border: #bfdccb; /* .badge-ok */
+  --color-ok-surface: #f1f8f4;
+  --color-warn-border: #e8d3ac; /* .badge-warn */
+  --color-warn-surface: #fbf5e9;
+  --color-merah-border: #efc4c5; /* .badge-red */
+  --color-ink-band: #2c2e35; /* .coinband dividers */
+  --color-ink-band-text: #a7aab3;
+  --color-merah-on-ink: #ff6b6f; /* .coin-h em */
+
+  /* ── Type families ───────────────────────────────────────────────────────── */
+  --font-display: 'Archivo', system-ui, sans-serif;
+  --font-body: 'Instrument Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* ── Type scale ───────────────────────────────────────────────────────────
+     Named by role rather than by size, because ds.css uses each size for one
+     job. Fluid sizes keep the clamp() they were authored with. */
+  --text-micro: 10.5px; /* .spec, .tbl th, .foot h4 */
+  --text-eyebrow: 11px; /* .eyebrow, .chip */
+  --text-mono: 12px; /* .mono */
+  --text-small: 14.5px; /* .small, .check, .foot ul */
+  --text-base: 17px; /* body */
+  --text-h3: 20px; /* .h3, .type h3 */
+  --text-modal-title: 23px; /* .modal h3 */
+  --text-lede: clamp(16px, 1.5vw, 19.5px);
+  --text-section-title: clamp(30px, 4.4vw, 50px);
+  --text-page-title: clamp(34px, 4.6vw, 56px);
+
+  /* ── Line heights ─────────────────────────────────────────────────────────── */
+  --leading-body: 1.6;
+  --leading-display: 0.94;
+  --leading-title: 1.02;
+  --leading-flat: 1;
+
+  /* ── Letter spacing ───────────────────────────────────────────────────────── */
+  --tracking-display: -0.038em;
+  --tracking-title: -0.032em;
+  --tracking-tight: -0.02em;
+  --tracking-mono: 0.04em;
+  --tracking-label: 0.12em; /* .sec-link, .badge, .chip */
+  --tracking-eyebrow: 0.2em;
+
+  /* ── Radii ────────────────────────────────────────────────────────────────
+     ds.css uses exactly one corner radius. The design is deliberately square. */
+  --radius-sm: 2px;
+
+  /* ── Spacing and layout spine ─────────────────────────────────────────────
+     --spacing-gut is the ONE horizontal gutter; --container-page the ONE
+     container width. Only backgrounds bleed edge to edge (see ds.css header). */
+  --spacing-gut: clamp(20px, 4vw, 56px);
+  --spacing-section: clamp(56px, 8vw, 104px);
+  --spacing-page-head: clamp(44px, 6vw, 76px);
+  --container-page: 1560px;
+  --container-measure: 68ch;
+
+  /* ── Breakpoints ──────────────────────────────────────────────────────────
+     The three ds.css media queries, so Tailwind's variants match the prototype. */
+  --breakpoint-sm: 560px;
+  --breakpoint-md: 880px;
+  --breakpoint-lg: 1180px;
+}
+
+/* Not Tailwind namespaces — plain custom properties used directly in CSS. */
+:root {
+  --measure: 68ch;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}

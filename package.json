@@ -1,0 +1,40 @@
+{
+  "name": "buildcalendar",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "dev": "pnpm dev:redis && concurrently -n web,renderer -c blue,magenta \"pnpm --filter @buildcalendar/web dev\" \"pnpm --filter @buildcalendar/renderer dev\"",
+    "dev:redis": "docker compose --project-directory . -f infra/docker-compose.yml up -d redis",
+    "dev:stop": "docker compose --project-directory . -f infra/docker-compose.yml down",
+    "stack": "docker compose --project-directory . -f infra/docker-compose.yml up --build",
+    "build": "pnpm --filter @buildcalendar/db generate && pnpm -r --filter \"./apps/*\" build",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm --filter @buildcalendar/db generate && pnpm -r typecheck",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check:rls": "node scripts/check-rls.mjs",
+    "db:generate": "pnpm --filter @buildcalendar/db generate",
+    "db:migrate": "pnpm --filter @buildcalendar/db migrate",
+    "db:deploy": "pnpm --filter @buildcalendar/db migrate:deploy",
+    "db:seed": "pnpm --filter @buildcalendar/db seed",
+    "db:studio": "pnpm --filter @buildcalendar/db studio"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "@types/node": "20.19.43",
+    "concurrently": "9.2.4",
+    "eslint": "9.39.5",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "globals": "16.5.0",
+    "prettier": "3.9.6",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.67.0"
+  }
+}

@@ -1,0 +1,19 @@
+# Set SITE_DOMAIN in the environment to get automatic TLS. Falls back to :80 for
+# local use, where a certificate would be pointless.
+{$SITE_DOMAIN::80} {
+	encode zstd gzip
+
+	# The renderer is never exposed here. Only `web` is reachable from outside.
+	reverse_proxy web:3000
+
+	header {
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy strict-origin-when-cross-origin
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}

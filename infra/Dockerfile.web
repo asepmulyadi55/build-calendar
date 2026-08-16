@@ -1,0 +1,38 @@
+# Next.js standalone build. Runs under mem_limit 400m (RQ-MEM-06).
+FROM node:20-bookworm-slim AS base
+ENV PNPM_HOME=/pnpm PATH=$PNPM_HOME:$PATH
+RUN corepack enable
+WORKDIR /repo
+
+FROM base AS deps
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY apps/web/package.json apps/web/
+COPY apps/renderer/package.json apps/renderer/
+COPY packages/db/package.json packages/db/
+COPY packages/ui/package.json packages/ui/
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+FROM deps AS build
+COPY . .
+RUN pnpm --filter @buildcalendar/db generate \
+ && pnpm --filter @buildcalendar/web build
+
+FROM node:20-bookworm-slim AS runtime
+ENV NODE_ENV=production
+# sharp and Prisma both allocate outside the JS heap; without this the RSS of a
+# long-lived Node process climbs job after job. Measured in spike/REPORT.md §3.1.
+ENV MALLOC_ARENA_MAX=2
+WORKDIR /app
+
+RUN groupadd --system --gid 1001 nodejs \
+ && useradd --system --uid 1001 --gid nodejs nextjs
+
+COPY --from=build --chown=nextjs:nodejs /repo/apps/web/.next/standalone ./
+COPY --from=build --chown=nextjs:nodejs /repo/apps/web/.next/static ./apps/web/.next/static
+COPY --from=build --chown=nextjs:nodejs /repo/apps/web/public ./apps/web/public
+
+USER nextjs
+EXPOSE 3000
+ENV PORT=3000 HOSTNAME=0.0.0.0
+
+CMD ["node", "apps/web/server.js"]
