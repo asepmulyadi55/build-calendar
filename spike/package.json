@@ -1,0 +1,17 @@
+{
+  "name": "buildcalendar-spike",
+  "private": true,
+  "version": "0.0.0",
+  "description": "P1-US-000 throwaway spike. Not architected, not tested, will be deleted.",
+  "type": "module",
+  "scripts": {
+    "render": "node src/render.js",
+    "verify": "node src/verify.js"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.10.38",
+    "puppeteer-core": "^24.10.2",
+    "sharp": "^0.34.2"
+  }
+}
