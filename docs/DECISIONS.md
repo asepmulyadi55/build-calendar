@@ -186,6 +186,32 @@ Revisit only when a concrete trigger appears: sustained CPU or memory contention
 
 ---
 
+## ADR-0009 — Judgement calls made building the public pages
+
+**Date:** 2026-08 · **Status:** Accepted
+
+**Context.** Epic 1 translated `design/index.html`, `samples.html` and `pricing.html` into the app. Six places needed a decision the prototype did not answer, mostly because the prototype had fixed content where the real page reads a database.
+
+**Decision.**
+
+1. **`ds.css` is copied into `packages/ui/src/components.css`, not reimplemented as Tailwind utilities.** The design is finished and the job is translation; rewriting 700 lines of working CSS as utility classes would create drift with no benefit. The copy carries a header naming its source, is excluded from Prettier so the two stay diffable, and omits the app-shell, editor and checklist sections so a marketing page does not ship the editor's CSS. Tokens still live in `theme.css`, and `components.css` reaches them through alias variables — one value per token, two spellings.
+
+2. **Public pages revalidate every 60 seconds rather than being fully static.** Coin packages, product presets and the WhatsApp number are all admin-editable. A fully static page would bake in whatever the database said at build time, so an admin edit would need a redeploy to appear — the same failure as hardcoding, one step removed.
+
+3. **Copy containing a figure keeps its wording and takes a slot.** The coin explainer's "That works out to about Rp2.000" is the prototype's sentence, and the number is filled from the cheapest active package divided by the unlock cost. The wording was chosen deliberately and is left alone; the figure must never be a literal (BR-C01, BR-C04).
+
+4. **Two copy lines were changed because data made them false.** The prototype's "Four formats" and "One for your desk, three for your wall" assume exactly four products; the seed ships five and an admin may add more. The eyebrow became "{count} formats" and the heading "One for your desk, the rest for your wall." The `.types` grid also had to stop painting its own background, because the 1px-gap hairline trick leaves a grey block when the card count does not fill the row — the hairline now comes from a ring on each card and survives any count.
+
+5. **The type card is a `div` with two links, not one big anchor.** P1-US-101 requires a "see samples" link on each card, and an anchor cannot legally contain another anchor.
+
+6. **Analytics events are logged, not stored.** P1-US-104 requires WhatsApp clicks to be recorded and P1-US-105 will use the count to decide whether Phase 2 is worth building. No provider is chosen yet, so `/api/events` accepts a fixed set of event names and writes a structured log line with no personal data. An unbounded events table on a 500 MB database is a slow leak, and the number is only ever read in aggregate.
+
+**Consequences.** The pages contain no price, coin amount, phone number, or hex colour — asserted by tests that scan the source rather than the rendered output, because the rule is about what must not be written down. Two things follow: `components.css` must be re-diffed against `ds.css` whenever the design changes, and the 60-second revalidation is the upper bound on how long an admin waits to see a price change.
+
+One consequence is worth stating separately: the hero's calendar mockup renders through `calendar-core`, not hardcoded Indonesian strings. It is a picture of printed output, so it belongs to the Indonesian layer (master §10.7), and routing it through the one engine is what stops the marketing page and the exported PDF from disagreeing about what January looks like.
+
+---
+
 ## Template for new entries
 
 Copy the block below verbatim when adding a decision. It is shown as raw markdown on purpose — so the heading and bold syntax stay visible and copyable rather than rendering as formatting.

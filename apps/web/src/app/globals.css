@@ -1,54 +1,35 @@
 @import 'tailwindcss';
 @import '@buildcalendar/ui/theme.css';
+@import '@buildcalendar/ui/components.css';
 
-/* Tailwind v4 scans this package's sources by default. The token file lives in
-   another workspace package, so point the scanner at anything that uses it. */
+/* Tailwind v4 scans this package's sources by default. The tokens live in another
+   workspace package, so point the scanner at anything that uses them. */
 @source '../../src';
 
-/* Base styles from design/assets/ds.css. Component classes are NOT copied here —
-   components arrive with the stories that need them (P1-US-003). */
+/* Base styles come from components.css, which is the copy of ds.css. Only two
+   things belong here, and both are app-level rather than design-level. */
 @layer base {
-  html {
-    scroll-behavior: smooth;
+  /* next/font loads the three families and exposes them as CSS variables. Bind the
+     design tokens to the loaded faces so ds.css keeps its own names. */
+  :root {
+    --font-display: var(--font-display-loaded), 'Archivo', system-ui, sans-serif;
+    --font-body: var(--font-body-loaded), 'Instrument Sans', system-ui, sans-serif;
+    --font-mono: var(--font-mono-loaded), 'IBM Plex Mono', ui-monospace, monospace;
   }
 
-  body {
-    background: var(--color-paper);
-    color: var(--color-ink);
-    font-family: var(--font-body);
-    font-size: var(--text-base);
-    line-height: var(--leading-body);
-    -webkit-font-smoothing: antialiased;
-    position: relative;
+  /* Keyboard users must be able to jump past the navigation. */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 1000;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 18px;
+    font-size: var(--text-small);
   }
 
-  /* The paper grain overlay is the signature of the design. */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 9999;
-    background-image: var(--grain);
-    opacity: 0.55;
-  }
-
-  :focus-visible {
-    outline: 2.5px solid var(--color-merah);
-    outline-offset: 3px;
-    border-radius: var(--radius-sm);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation: none !important;
-      transition: none !important;
-    }
-
-    html {
-      scroll-behavior: auto;
-    }
+  .skip-link:focus {
+    left: 0;
   }
 }

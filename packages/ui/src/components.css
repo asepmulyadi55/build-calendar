@@ -1,0 +1,704 @@
+/* BuildCalendar component styles.
+ *
+ * Copied from `design/assets/ds.css`, which is the source of truth for the design
+ * (P1-US-003). Nothing here is invented. If a value needs to change, change it in
+ * ds.css first, then mirror it here.
+ *
+ * Tokens live in `theme.css`; this file is the component layer that consumes them.
+ * The app-shell, editor and validation-checklist sections of ds.css are deliberately
+ * omitted — they arrive with the epics that need them, so a marketing page does not
+ * ship the editor's CSS.
+ *
+ * Light mode only. Dark mode is out of scope.
+ */
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--f-body);font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;position:relative;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+  background-image:var(--grain);opacity:.55;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+:focus-visible{outline:2.5px solid var(--merah);outline-offset:3px;border-radius:2px}
+
+/* ---------- layout ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--gut)}
+section{padding:clamp(56px,8vw,104px) 0}
+.alt{background:var(--paper-2);border-block:1px solid var(--rule)}
+.page-head{padding:clamp(44px,6vw,76px) 0 clamp(28px,3vw,40px)}
+
+/* ---------- typography ---------- */
+.eyebrow{font-family:var(--f-mono);font-size:11px;font-weight:500;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--ink-45)}
+.display{font-family:var(--f-display);font-weight:800;letter-spacing:-.038em;line-height:.94}
+.sec-title{font-family:var(--f-display);font-weight:700;letter-spacing:-.032em;
+  font-size:clamp(30px,4.4vw,50px);line-height:1.02;max-width:20ch}
+.page-title{font-family:var(--f-display);font-weight:800;letter-spacing:-.036em;
+  font-size:clamp(34px,4.6vw,56px);line-height:1;max-width:18ch}
+.h3{font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:-.02em}
+.lede{font-size:clamp(16px,1.5vw,19.5px);color:var(--ink-70);max-width:var(--measure)}
+.mono{font-family:var(--f-mono);font-size:12px;letter-spacing:.04em}
+.muted{color:var(--ink-70)}
+.small{font-size:14.5px}
+
+/* Section head: title left, optional action right, on one full-width row. */
+.sec-head{margin-bottom:clamp(30px,4vw,52px);
+  display:flex;justify-content:space-between;align-items:flex-end;gap:48px}
+.sec-head .eyebrow{display:block;margin-bottom:15px}
+.sec-head p{margin-top:15px}
+/* Use when the content below is narrower than the container, so the head
+   never floats wider than what it introduces. */
+.sec-head--narrow{max-width:880px}
+.sec-link{flex:none;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-45);padding-bottom:4px;
+  border-bottom:1px solid var(--rule);white-space:nowrap;
+  transition:color .16s ease,border-color .16s ease}
+.sec-link:hover{color:var(--ink);border-color:var(--ink)}
+
+/* ---------- print-sheet framing (signature device) ---------- */
+.sheet{position:relative}
+.sheet::before,.sheet::after,.sheet>.cm-b::before,.sheet>.cm-b::after{
+  content:'';position:absolute;width:14px;height:14px;pointer-events:none;
+  border-color:var(--ink-25);border-style:solid;border-width:0}
+.sheet::before{top:-9px;left:-9px;border-top-width:1px;border-left-width:1px}
+.sheet::after{top:-9px;right:-9px;border-top-width:1px;border-right-width:1px}
+.sheet>.cm-b::before{bottom:-9px;left:-9px;border-bottom-width:1px;border-left-width:1px}
+.sheet>.cm-b::after{bottom:-9px;right:-9px;border-bottom-width:1px;border-right-width:1px}
+.spec{margin-top:11px;font-family:var(--f-mono);font-size:10.5px;
+  letter-spacing:.08em;color:var(--ink-25);text-align:right}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  font-family:var(--f-body);font-weight:600;font-size:15px;
+  padding:15px 26px;border-radius:2px;border:1px solid transparent;
+  cursor:pointer;transition:transform .16s ease,background .16s ease,color .16s ease}
+.btn-primary{background:var(--merah);color:#fff}
+.btn-primary:hover{background:#B81C22;transform:translateY(-1px)}
+.btn-dark{background:var(--ink);color:var(--paper)}
+.btn-dark:hover{background:#000;transform:translateY(-1px)}
+.btn-ghost{border-color:var(--ink-25);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.btn-sm{padding:10px 18px;font-size:14px}
+.btn-block{width:100%}
+.btn[disabled],.btn.is-disabled{opacity:.4;pointer-events:none}
+
+/* ---------- badges ---------- */
+.badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);
+  font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  padding:4px 8px;border:1px solid var(--rule);color:var(--ink-45);background:var(--paper)}
+.badge-ok{color:var(--ok);border-color:#BFDCCB;background:#F1F8F4}
+.badge-warn{color:var(--warn);border-color:#E8D3AC;background:#FBF5E9}
+.badge-red{color:var(--merah);border-color:#EFC4C5;background:var(--merah-soft)}
+.badge-ink{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* ---------- marketing nav ---------- */
+.nav{position:sticky;top:0;z-index:100;background:rgba(250,250,248,.9);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--rule)}
+.nav-in{display:flex;align-items:center;gap:32px;height:68px}
+.brand{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:-.03em}
+.brand span{color:var(--merah)}
+.nav-links{display:flex;gap:28px;margin-left:auto;font-size:15px;color:var(--ink-70)}
+.nav-links a:hover,.nav-links a.on{color:var(--ink)}
+.nav-cta{display:flex;gap:10px;align-items:center}
+
+/* ---------- cards & grids ---------- */
+.card{background:#fff;border:1px solid var(--rule);padding:22px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.stack{display:grid;gap:14px}
+.row{display:flex;align-items:center;gap:12px}
+.row-between{display:flex;align-items:center;justify-content:space-between;gap:16px}
+
+/* ---------- forms ---------- */
+.form{max-width:420px;display:grid;gap:18px}
+.field{display:grid;gap:7px}
+.field label{font-size:14px;font-weight:600}
+.field .hint{font-size:13px;color:var(--ink-45)}
+.input,select.input,textarea.input{
+  width:100%;padding:13px 14px;font:inherit;font-size:15.5px;
+  background:#fff;border:1px solid var(--ink-25);border-radius:2px;color:var(--ink)}
+.input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(22,23,27,.07)}
+.input::placeholder{color:var(--ink-25)}
+/* Block, not flex. A flex container turns every text node and inline link
+   into a separate flex item, which shreds sentences that contain links.
+   Absolute-positioning the box lets the label text flow as normal prose. */
+.check{display:block;position:relative;padding-left:27px;
+  font-size:14.5px;line-height:1.55;color:var(--ink-70)}
+.check input{position:absolute;left:0;top:5px;margin:0}
+.check a{color:var(--ink);border-bottom:1px solid var(--rule)}
+.check a:hover{border-color:var(--ink)}
+.divider{display:flex;align-items:center;gap:14px;color:var(--ink-45);
+  font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--rule)}
+.auth{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
+.auth-pane{padding:clamp(28px,5vw,64px);display:flex;flex-direction:column;justify-content:center}
+.auth-art{background:var(--paper-2);border-left:1px solid var(--rule);
+  display:flex;align-items:center;justify-content:center;padding:40px}
+
+/* ---------- calendar component (Indonesian output) ---------- */
+.cal{background:#fff;border:1px solid var(--rule);
+  box-shadow:0 1px 0 var(--paper-3),0 20px 50px -30px rgba(22,23,27,.38)}
+.cal-photo{aspect-ratio:4/3;position:relative;overflow:hidden;background:var(--paper-2);
+  display:flex;align-items:center;justify-content:center}
+.ph{position:absolute;inset:0;background:
+    radial-gradient(120% 90% at 18% 12%,#F5C99B 0%,transparent 55%),
+    radial-gradient(110% 100% at 88% 22%,#E98C7A 0%,transparent 52%),
+    radial-gradient(130% 110% at 45% 105%,#2E4A63 0%,transparent 62%),
+    linear-gradient(168deg,#F2D6B4 0%,#C97D6E 45%,#3A5570 100%)}
+.ph::after{content:'';position:absolute;inset:0;background-image:var(--grain);opacity:.5}
+.ph-fade{opacity:0;transition:opacity .9s ease}
+.cal.filled .ph-fade{opacity:1}
+.slot-hint{position:relative;z-index:2;text-align:center;border:1.5px dashed var(--ink-25);
+  border-radius:2px;padding:16px 24px;background:rgba(250,250,248,.72);
+  transition:opacity .5s ease,transform .5s ease}
+.cal.filled .slot-hint{opacity:0;transform:scale(.96)}
+.slot-hint .mono{color:var(--ink-45);display:block;margin-bottom:2px}
+.slot-hint b{font-family:var(--f-display);font-size:15px;letter-spacing:-.01em}
+.cal-body{padding:22px 24px 24px}
+.cal-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:15px}
+.cal-month{font-family:var(--f-display);font-weight:800;font-size:27px;letter-spacing:-.03em}
+.cal-year{font-family:var(--f-mono);font-size:13px;color:var(--ink-45)}
+.months{display:flex;gap:3px;margin-bottom:17px;flex-wrap:wrap}
+.months span{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;
+  color:var(--ink-25);padding:3px 5px;border:1px solid transparent}
+.months span.on{color:var(--ink);border-color:var(--rule);background:var(--paper-2)}
+table.grid{width:100%;border-collapse:collapse;font-family:var(--f-mono)}
+table.grid th{font-size:10px;font-weight:500;letter-spacing:.1em;color:var(--ink-45);
+  text-transform:uppercase;padding-bottom:9px;text-align:center}
+table.grid td{text-align:center;font-size:14px;padding:6px 0;color:var(--ink-70);
+  border-top:1px solid var(--paper-2)}
+table.grid td.red{color:var(--merah);font-weight:500}
+table.grid td.mute{color:var(--ink-25)}
+table.grid td.mark{position:relative;color:var(--merah);font-weight:500}
+table.grid td.mark::after{content:'';position:absolute;left:50%;bottom:2px;
+  transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:var(--merah)}
+.legend{margin-top:15px;padding-top:12px;border-top:1px solid var(--rule);
+  display:flex;gap:8px;align-items:center;font-family:var(--f-mono);font-size:11px}
+.legend .dot{width:5px;height:5px;border-radius:50%;background:var(--merah);flex:none}
+.legend span{color:var(--ink-70)}
+
+/* ---------- sample thumbnails ---------- */
+.samp{background:#fff;border:1px solid var(--rule);padding:11px;display:block}
+.samp .img{aspect-ratio:3/4;position:relative;overflow:hidden}
+.samp .img::after{content:'';position:absolute;inset:0;background-image:var(--grain);opacity:.5}
+.samp .cap{display:flex;justify-content:space-between;align-items:center;padding-top:11px}
+.samp .cap b{font-family:var(--f-display);font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+.samp .cap .mono{color:var(--ink-45);font-size:10.5px}
+.samp:hover{border-color:var(--ink)}
+.s1{background:linear-gradient(160deg,#E8C9A0,#C4776A 55%,#3E4E63)}
+.s2{background:linear-gradient(160deg,#CFE0D5,#7FA891 50%,#2F4A46)}
+.s3{background:linear-gradient(160deg,#E4D3E6,#9A7FA8 52%,#3B3552)}
+.s4{background:linear-gradient(160deg,#F0DDB8,#C9A24C 50%,#5A4520)}
+.s5{background:linear-gradient(160deg,#D6E2EE,#6E90B4 52%,#26374B)}
+.s6{background:linear-gradient(160deg,#F2D9D2,#C98679 50%,#5C3630)}
+.s7{background:linear-gradient(160deg,#E2E2DC,#9C9C93 50%,#3B3B36)}
+.s8{background:linear-gradient(160deg,#FBE3C4,#D99C52 52%,#6B4218)}
+
+/* ---------- filter chips ---------- */
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  padding:8px 13px;border:1px solid var(--rule);background:var(--paper);color:var(--ink-45)}
+.chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chip:hover{color:var(--ink);border-color:var(--ink-25)}
+
+/* ---------- table ---------- */
+.tbl{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--rule)}
+.tbl th{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-45);text-align:left;padding:13px 16px;border-bottom:1px solid var(--rule);font-weight:500}
+.tbl td{padding:14px 16px;border-bottom:1px solid var(--paper-2);font-size:15px}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .num{font-family:var(--f-mono);font-size:14px}
+
+/* ---------- modal ---------- */
+.modal-bg{position:fixed;inset:0;background:rgba(22,23,27,.55);z-index:500;
+  display:grid;place-items:center;padding:24px}
+.modal{background:var(--paper);border:1px solid var(--rule);max-width:480px;width:100%;
+  padding:30px 28px;box-shadow:0 40px 80px -40px rgba(0,0,0,.5)}
+.modal h3{font-family:var(--f-display);font-weight:700;font-size:23px;
+  letter-spacing:-.025em;margin-bottom:12px}
+
+/* ---------- steps / how it works ---------- */
+.step .n{font-family:var(--f-display);font-weight:800;font-size:48px;
+  letter-spacing:-.04em;color:var(--paper-3);line-height:1}
+.step h3{font-family:var(--f-display);font-weight:700;font-size:21px;
+  letter-spacing:-.02em;margin:10px 0 9px}
+.step p{font-size:15.5px;color:var(--ink-70);max-width:38ch}
+
+/* ---------- footer ---------- */
+footer{background:var(--paper-2);border-top:1px solid var(--rule);padding:56px 0 42px}
+.foot{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:34px}
+.foot h4{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-45);margin-bottom:15px;font-weight:500}
+.foot ul{list-style:none;display:grid;gap:9px;font-size:14.5px;color:var(--ink-70)}
+.foot ul a:hover{color:var(--ink)}
+.foot-note{margin-top:44px;padding-top:22px;border-top:1px solid var(--rule);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:var(--f-mono);font-size:11px;color:var(--ink-45)}
+
+/* ---------- whatsapp float ---------- */
+.wa{position:fixed;right:22px;bottom:22px;z-index:200;display:flex;align-items:center;gap:10px;
+  background:var(--ink);color:var(--paper);padding:13px 19px;border-radius:2px;
+  font-size:14px;font-weight:600;box-shadow:0 12px 30px -14px rgba(22,23,27,.6);
+  transition:transform .18s ease}
+.wa:hover{transform:translateY(-2px)}
+.wa svg{flex:none}
+
+/* ---------- prototype banner ---------- */
+.proto{background:var(--ink);color:var(--paper);font-family:var(--f-mono);font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;padding:7px 0;text-align:center}
+.proto a{border-bottom:1px solid rgba(250,250,248,.4)}
+
+/* ---------- responsive ---------- */
+@media(max-width:1180px){
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+  .editor{grid-template-columns:120px 1fr 260px}
+  .foot{grid-template-columns:1fr 1fr}
+}
+@media(max-width:880px){
+  .nav-links{display:none}
+  .grid-3,.grid-2{grid-template-columns:1fr}
+  .sec-head{flex-direction:column;align-items:flex-start;gap:20px}
+  .app{grid-template-columns:1fr}
+  .side{position:static;height:auto;flex-direction:row;align-items:center;overflow-x:auto}
+  .side-foot{display:none}
+  .side-nav{grid-auto-flow:column;gap:6px}
+  .auth{grid-template-columns:1fr}
+  .auth-art{display:none}
+  .editor{grid-template-columns:1fr;height:auto}
+  .ed-sheets,.ed-panel{border:none;border-bottom:1px solid var(--rule)}
+  .ed-sheets{grid-auto-flow:column;overflow-x:auto}
+}
+@media(max-width:560px){
+  body{font-size:16px}
+  .grid-4{grid-template-columns:1fr}
+  .foot{grid-template-columns:1fr}
+  .wa span{display:none}
+  .wa{padding:14px;border-radius:50%}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+
+/* ==========================================================================
+   MARKETING PAGE COMPONENTS
+   ========================================================================== */
+
+/* ---------- hero ---------- */
+.hero{padding:clamp(48px,7vw,96px) 0 clamp(56px,7vw,100px)}
+.hero-grid{display:grid;grid-template-columns:1.08fr 1fr;gap:clamp(40px,6vw,90px);align-items:center}
+.hero h1{font-size:clamp(42px,6vw,86px);margin:20px 0 24px}
+.hero h1 em{font-style:normal;color:var(--merah)}
+.hero .lede{max-width:46ch}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin:32px 0 24px}
+
+/* FIXED: this was display:flex, which turned the bold lead-in into its own
+   narrow column. It is a single paragraph with a rule down its left side. */
+.promise{display:block;border-left:2px solid var(--merah);padding-left:16px;
+  font-size:15.5px;color:var(--ink-70);max-width:48ch}
+.promise b{color:var(--ink);font-weight:600}
+
+/* ---------- product types ---------- */
+/* CHANGED from ds.css: the grid painted its own background so the 1px gaps read as
+   hairlines. That works only when the card count exactly fills the rows — the
+   prototype had four. Products come from `product_presets`, so an admin adding a
+   fifth left an empty cell showing as a grey block. The hairline now comes from a
+   ring on each card, which looks identical and survives any count. */
+.types{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  border:1px solid var(--rule)}
+.type{background:var(--paper);padding:30px 26px 28px;transition:background .18s ease;display:block;
+  box-shadow:0 0 0 1px var(--rule)}
+.type:hover{background:#fff}
+.type .idx{font-family:var(--f-mono);font-size:11px;color:var(--ink-25);letter-spacing:.1em}
+.type h3{font-family:var(--f-display);font-weight:700;font-size:20px;
+  letter-spacing:-.02em;margin:14px 0 9px}
+.type p{font-size:15px;color:var(--ink-70);line-height:1.55}
+.type .dims{margin-top:18px;padding-top:14px;border-top:1px solid var(--rule);
+  font-family:var(--f-mono);font-size:11px;color:var(--ink-45);letter-spacing:.03em}
+.type .dims b{color:var(--ink);font-weight:500}
+.mini{height:82px;display:flex;align-items:flex-end}
+.mini i{display:block;border:1px solid var(--ink-25);background:#fff;position:relative}
+.mini i::after{content:'';position:absolute;left:12%;right:12%;top:12%;height:42%;
+  background:var(--paper-3)}
+
+/* ---------- coin explainer band ---------- */
+.coinband{background:var(--ink);color:var(--paper);padding:clamp(44px,6vw,74px) 0}
+.coinband .eyebrow{color:var(--ink-25)}
+.coin-h{font-family:var(--f-display);font-weight:700;letter-spacing:-.032em;
+  font-size:clamp(28px,3.8vw,44px);line-height:1.06;margin:16px 0 34px;max-width:20ch}
+.coin-h em{font-style:normal;color:#FF6B6F}
+.coinflow{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:#2C2E35;border:1px solid #2C2E35}
+.cf{background:var(--ink);padding:26px 24px}
+.cf .mono{color:var(--ink-25);letter-spacing:.16em;font-size:10px;text-transform:uppercase}
+.cf b{display:block;font-family:var(--f-display);font-size:18px;font-weight:600;
+  letter-spacing:-.02em;margin:11px 0 7px}
+.cf p{font-size:14.5px;color:#A7AAB3;line-height:1.5;max-width:34ch}
+
+/* ---------- pricing ---------- */
+.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:stretch}
+.plan{background:#fff;border:1px solid var(--rule);padding:28px 26px 26px;
+  position:relative;display:flex;flex-direction:column}
+.plan .btn{margin-top:auto}
+.plan.pop{border-color:var(--ink);box-shadow:0 14px 40px -30px rgba(22,23,27,.5)}
+.plan .tag{position:absolute;top:-1px;right:-1px;background:var(--merah);color:#fff;
+  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.14em;padding:5px 10px;text-transform:uppercase}
+.plan .coins{font-family:var(--f-mono);font-size:12px;color:var(--ink-45);
+  letter-spacing:.1em;text-transform:uppercase}
+.plan .price{font-family:var(--f-display);font-weight:800;font-size:40px;
+  letter-spacing:-.04em;margin:11px 0 4px}
+.plan .per{font-size:13.5px;color:var(--ink-70);margin-bottom:20px}
+.plan .per b{color:var(--merah);font-weight:600}
+.plan-alt{background:transparent;border-style:dashed}
+.plan-alt .kicker{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-45)}
+.plan-alt h3{font-family:var(--f-display);font-weight:700;font-size:21px;
+  letter-spacing:-.025em;margin:12px 0 10px;line-height:1.15}
+.plan-alt p{font-size:14.5px;color:var(--ink-70);line-height:1.55;margin-bottom:20px}
+
+.benefits{margin-top:44px;border-top:1px solid var(--rule);padding-top:34px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:18px 40px}
+.ben{display:flex;gap:12px;align-items:flex-start;font-size:15px;color:var(--ink-70)}
+.ben svg{flex:none;margin-top:4px}
+.ben b{color:var(--ink);font-weight:600}
+
+/* ---------- FAQ ----------
+   FIXED: the head used to span the full 1560px container while the list
+   below was capped at 880px, leaving the action link floating in a void.
+   Now it is a two-column block: the head anchors the left, questions the
+   right, and both share one bottom edge. */
+.faq-wrap{display:grid;grid-template-columns:minmax(280px,1fr) 1.6fr;gap:clamp(32px,5vw,80px);
+  align-items:start}
+.faq-side{position:sticky;top:100px}
+.faq-side .sec-title{font-size:clamp(28px,3.4vw,42px)}
+.faq-side .sec-link{display:inline-block;margin-top:22px}
+.faq details{border-top:1px solid var(--rule)}
+.faq details:last-of-type{border-bottom:1px solid var(--rule)}
+.faq summary{cursor:pointer;list-style:none;padding:21px 44px 21px 0;position:relative;
+  font-family:var(--f-display);font-weight:600;font-size:18px;letter-spacing:-.015em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';position:absolute;right:6px;top:20px;
+  font-family:var(--f-mono);font-size:19px;color:var(--ink-45)}
+.faq details[open] summary::after{content:'–'}
+.faq .ans{padding:0 46px 24px 0;color:var(--ink-70);font-size:15.5px;max-width:var(--measure)}
+
+/* ---------- final cta ---------- */
+.final{text-align:center;padding-block:clamp(70px,9vw,130px)}
+.final h2{font-family:var(--f-display);font-weight:800;letter-spacing:-.038em;
+  font-size:clamp(34px,5.4vw,66px);line-height:1;margin-bottom:20px}
+.final p{margin:0 auto 32px}
+
+@media(max-width:1180px){
+  .types{grid-template-columns:repeat(2,1fr)}
+  .plans{grid-template-columns:repeat(2,1fr)}
+  .benefits{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:880px){
+  .hero-grid{grid-template-columns:1fr;gap:46px}
+  .coinflow{grid-template-columns:1fr}
+  .coinflow .cf{border-bottom:1px solid #2C2E35}
+  .faq-wrap{grid-template-columns:1fr}
+  .faq-side{position:static}
+}
+@media(max-width:560px){
+  .types{grid-template-columns:1fr}
+  .plans{grid-template-columns:1fr}
+  .benefits{grid-template-columns:1fr}
+}
+
+/* ==========================================================================
+   RESPONSIVE — corrections
+   The earlier breakpoints collapsed grids but left real holes. Fixed here.
+   Most Indonesian traffic is mobile, and NFR-C03 says the payment path must
+   never be blocked on a phone, so these are correctness fixes rather than
+   polish.
+   ========================================================================== */
+
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+img,svg,video,canvas{max-width:100%;height:auto}
+
+/* Nothing may push the page sideways. A single overflowing table used to
+   introduce a horizontal scrollbar across the whole document. */
+body{overflow-x:hidden}
+
+/* ---------- tablet: 1180 → 880 ---------- */
+@media(max-width:1100px){
+  /* The hero was two columns down to 880px, which squeezed the calendar
+     into an unreadable width on a portrait tablet. Stack it earlier. */
+  .hero-grid{grid-template-columns:1fr;gap:44px}
+  .hero .lede,.promise{max-width:60ch}
+  .hero .sheet{max-width:460px}
+  .editor{grid-template-columns:110px 1fr 250px}
+}
+
+/* ---------- mobile navigation: hamburger ----------
+   CSS-only, driven by a hidden checkbox, so it works on every static page
+   without JavaScript.
+
+   The primary CTA deliberately stays OUTSIDE the menu. "Make a calendar"
+   is the one action this whole page exists to produce; putting it behind
+   a tap costs conversions. "Sign in" is for returning visitors who will
+   go looking for it, so it lives inside the menu. */
+.nav{position:relative}
+.burger{display:none}
+
+@media(max-width:880px){
+  .burger{
+    display:flex;flex-direction:column;justify-content:center;gap:5px;
+    width:44px;height:44px;margin-left:auto;cursor:pointer;
+    padding:10px;border:1px solid var(--rule);border-radius:2px;
+  }
+  .burger span{display:block;height:1.5px;background:var(--ink);
+    transition:transform .2s ease,opacity .2s ease}
+  .nav-toggle:checked ~ .burger span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .nav-toggle:checked ~ .burger span:nth-child(2){opacity:0}
+  .nav-toggle:checked ~ .burger span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+  .nav-in{gap:12px}
+  .nav-links{
+    display:none;position:absolute;top:100%;left:0;right:0;
+    flex-direction:column;gap:0;margin:0;
+    background:var(--paper);border-bottom:1px solid var(--rule);
+    box-shadow:0 18px 34px -26px rgba(22,23,27,.5);
+  }
+  .nav-toggle:checked ~ .nav-links{display:flex}
+  .nav-links a{
+    padding:15px var(--gut);border-top:1px solid var(--rule);
+    font-size:16px;color:var(--ink);
+  }
+  .nav-links a:active{background:var(--paper-2)}
+  .nav-signin{display:block}
+
+  /* Order on the bar: brand, then CTA, then burger at the far right. */
+  .nav-cta{margin-left:auto;order:2}
+  .burger{order:3;margin-left:0}
+  .nav-signin-desktop{display:none}
+}
+
+@media(min-width:881px){
+  .nav-signin{display:none}
+}
+
+/* ---------- app shell on a phone ----------
+   The coin balance and Top up button used to be hidden entirely, which
+   blocked the payment path on the device most people actually use. */
+@media(max-width:880px){
+  .side{
+    position:static;height:auto;flex-direction:column;align-items:stretch;
+    gap:14px;padding:14px 16px;
+  }
+  .side-nav{grid-auto-flow:column;grid-auto-columns:max-content;gap:6px;
+    overflow-x:auto;scrollbar-width:none}
+  .side-nav::-webkit-scrollbar{display:none}
+  .side-nav a{white-space:nowrap;padding:9px 14px}
+  .side-foot{display:flex;align-items:center;gap:12px;margin-top:0}
+  .coinbox{flex:1;display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:10px 14px}
+  .coinbox .n{font-size:22px}
+  .coinbox .btn{margin-top:0;width:auto;flex:none}
+  .main{padding:20px 18px 48px}
+  .topbar{flex-wrap:wrap;gap:14px}
+}
+
+/* ---------- tables ----------
+   Wide tables used to overflow the viewport and drag the layout with them.
+   They now scroll on their own axis. */
+@media(max-width:720px){
+  .tbl,.gantt{display:block;overflow-x:auto;white-space:nowrap;
+    -webkit-overflow-scrolling:touch}
+  .tbl th,.tbl td{padding:12px 14px}
+}
+
+/* ---------- forms on iOS ----------
+   Any input below 16px makes Safari zoom the page on focus, which then
+   leaves the user zoomed in and lost. Sign-up is exactly where that must
+   not happen. */
+@media(max-width:880px){
+  .input,select.input,textarea.input{font-size:16px;padding:14px}
+  .form{max-width:none}
+}
+
+/* ---------- touch targets ---------- */
+@media(pointer:coarse){
+  .btn-sm{min-height:44px;padding-inline:18px}
+  .chip{min-height:40px;display:inline-flex;align-items:center}
+  .side-nav a,.nav-links a{min-height:40px;display:flex;align-items:center}
+  .faq summary{padding-block:22px}
+  .check{padding-block:4px}
+  .sw{width:34px;height:34px}
+}
+
+/* ---------- editor is desktop-only ----------
+   Spec NFR-C03: below 1024px show a friendly message, but never block
+   preview, unlock, export or payment. */
+.editor-notice{display:none}
+@media(max-width:1023px){
+  .editor{display:block;height:auto}
+  .ed-sheets,.ed-panel,.ed-canvas{display:none}
+  .editor-notice{
+    display:block;margin:40px auto;max-width:520px;text-align:center;
+    background:#fff;border:1px solid var(--rule);padding:32px 28px;
+  }
+  .editor-notice h2{font-family:var(--f-display);font-weight:700;
+    font-size:24px;letter-spacing:-.025em;margin:14px 0 10px}
+  .editor-notice p{color:var(--ink-70);font-size:15.5px;margin-bottom:22px}
+  .editor-notice .row{justify-content:center;flex-wrap:wrap;gap:10px}
+}
+
+/* ---------- small phones ---------- */
+@media(max-width:560px){
+  .proto{font-size:9.5px;letter-spacing:.06em;padding:6px 12px;line-height:1.5}
+  .hero-actions .btn,.final .btn{width:100%;justify-content:center}
+  .plan{padding:22px 20px}
+  .cal-body{padding:16px 16px 18px}
+  .cal-month{font-size:22px}
+  table.grid td{font-size:12.5px;padding:5px 0}
+  table.grid th{font-size:9px}
+  .months span{font-size:8.5px;padding:2px 4px}
+  .diagram{padding:12px}
+  .sec-link{white-space:normal}
+}
+
+/* ==========================================================================
+   OVERFLOW CONTAINMENT
+   Grid and flex items default to min-width:auto, so they refuse to shrink
+   below their content's intrinsic width. A horizontal nav row inside the
+   app sidebar therefore forced the sidebar wide, which forced the .app
+   grid wide, which pushed the whole page off screen — and overflow-x:auto
+   did nothing, because the element was never constrained in the first
+   place.
+
+   Every scroll container and every grid/flex child that holds wide content
+   needs min-width:0. This section is load-bearing; do not delete it.
+   ========================================================================== */
+
+.app > *,
+.main,
+.side,
+.side-nav,
+.nav-links,
+.hero-grid > *,
+.faq-wrap > *,
+.editor > *,
+.sec-head > *,
+.topbar > *,
+.row-between > *,
+.grid-2 > *, .grid-3 > *, .grid-4 > *,
+.types > *, .plans > *, .coinflow > *, .steps > *,
+.checks > *, .benefits > *,
+.diagram,
+.card{min-width:0}
+
+/* Long unbroken strings — an email, a URL, a payment reference — must wrap
+   rather than widen their container. */
+.card, .tbl td, .chk p, .cf p, .type p, .lede, .ans{overflow-wrap:anywhere}
+
+@media(max-width:880px){
+  /* The sidebar becomes a horizontal strip. Its nav scrolls on its own
+     axis; the balance row wraps instead of pushing sideways. */
+  .app{grid-template-columns:1fr}
+  .side{overflow:hidden}
+  .side-nav{overflow-x:auto;max-width:100%}
+  .side-foot{flex-wrap:wrap;gap:10px}
+  .coinbox{min-width:220px}
+  .side-foot > a{flex:none}
+
+  .topbar{align-items:flex-start}
+  .topbar .page-title{font-size:24px}
+  .topbar .row{flex-wrap:wrap}
+
+  /* Cards inside the app grid must not be forced wide by their images. */
+  .grid-4 > .card,.grid-3 > .card,.grid-2 > .card{overflow:hidden}
+}
+
+@media(max-width:560px){
+  .side-nav a{padding:9px 12px;font-size:14px}
+  .coinbox{min-width:0;width:100%}
+  .topbar .row{width:100%}
+  .topbar .row .btn{flex:1}
+}
+
+/* ---------- editor top bar ---------- */
+.project-title{width:220px;padding:9px 12px;font-size:14.5px}
+.nav-in .row{min-width:0}
+@media(max-width:880px){
+  /* The editor's nav still shows on a phone even though the canvas does
+     not, so the title field must shrink instead of pushing the buttons
+     off screen. */
+  .project-title{width:100%;min-width:0;font-size:16px}
+  .nav-in .row{flex:1;margin-left:0}
+  .save-state{display:none}
+}
+
+/* ---------- editor chrome follows the editor ----------
+   Below 1023px the canvas is replaced by a notice, so the editing tools
+   in the top bar must go with it. Leaving them behind produced a squashed
+   title field and two cramped buttons duplicating the actions already
+   offered in the notice card. */
+@media(max-width:1023px){
+  .editor-nav .nav-in{justify-content:space-between}
+  .editor-nav .row,
+  .editor-nav .project-title,
+  .editor-nav .save-state,
+  .editor-nav .nav-cta{display:none}
+}
+
+/* Navs without a hamburger (sitemap, project plan) carry two buttons that
+   only just fit at 440px. Let the bar wrap rather than overflow. */
+@media(max-width:560px){
+  .nav-in{flex-wrap:wrap;height:auto;padding-block:10px;gap:10px}
+  .nav-cta{flex-wrap:wrap}
+}
+
+/* ---------- additions ----------
+   Two patterns the prototype expressed as inline styles. Reproduced here as
+   classes so no component carries a literal colour or border value. Both use
+   existing tokens only. */
+.card-muted{border-style:dashed;background:transparent}
+.samp-button{width:100%;text-align:left;cursor:zoom-in}
+.modal-head{margin-bottom:12px}
+.foot-blurb{max-width:34ch;margin-top:13px}
+.final-lede{margin-inline:auto}
+.gallery-chips{margin-bottom:28px}
+.lightbox-img{aspect-ratio:3/4;position:relative;overflow:hidden}
+.lightbox-cap{margin-top:14px}
+.legal{max-width:var(--measure)}
+.legal h2{font-family:var(--f-display);font-weight:700;font-size:23px;letter-spacing:-.025em;margin:32px 0 12px}
+.legal h3{font-family:var(--f-display);font-weight:600;font-size:18px;margin:24px 0 10px}
+.legal p{margin-bottom:14px;color:var(--ink-70)}
+.legal ul{margin:0 0 14px 20px;color:var(--ink-70);display:grid;gap:7px}
+.legal a{color:var(--ink);border-bottom:1px solid var(--rule)}
+.legal a:hover{border-color:var(--ink)}
+.legal strong{color:var(--ink)}
+.section-flush{padding-top:0}
+.section-tight{padding-top:8px}
+.gallery-cta{margin-top:36px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.print-table{max-width:880px}
+.table-scroll{overflow-x:auto}
+.print-note{margin-top:16px;max-width:60ch}
+.print-phase{margin-top:28px;max-width:880px}
+.print-phase-body{margin-top:12px}
+.how-cta{margin-top:36px}
+
+/* The prototype set these two margins inline on every page-head. Reproduced as
+   rules so no page carries a spacing literal. */
+.page-head .page-title{margin-top:14px}
+.page-head .lede{margin-top:16px}
+
+/* The type card gained a second link (P1-US-101), so the whole card is no longer
+   one anchor. The hover state moves to the card, and the title link inherits. */
+.type:hover{background:#fff}
+.type h3 a{display:block}
+.type-samples{display:inline-block;margin-top:14px;font-family:var(--f-mono);font-size:11px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-45);
+  border-bottom:1px solid var(--rule);padding-bottom:3px;
+  transition:color .16s ease,border-color .16s ease}
+.type-samples:hover{color:var(--ink);border-color:var(--ink)}

@@ -18,7 +18,7 @@ Every session written out. Copy the block, paste it into Claude Code from the re
 | 0 | — | `P1-US-000` | — throwaway spike | **code done** · print-shop check outstanding |
 | 1 | 0 | `P1-US-001`, `003` | `assets/ds.css` | **done** · base components outstanding |
 | 2 | 0 | `P1-US-002` | — no UI | **done** |
-| 3 | 1 | `P1-US-101`–`104` | `index`, `samples`, `pricing` | next |
+| 3 | 1 | `P1-US-101`–`104` | `index`, `samples`, `pricing` | **done** · 3 items partial |
 | 4 | 2 | `P1-US-201`–`203` | `signin`, `signup` | |
 | 5 | 7 | `P1-US-702` | `admin` | |
 | 6 | 3 | `P1-US-301`, `302` | `app-new` | |
@@ -39,7 +39,7 @@ Two orderings are deliberate. **Session 5 builds template management before the 
 
 ---
 
-## Session 0 — The spike
+## Session 0 — The spike ✅ done
 
 **Status: code done · print-shop check outstanding**
 
@@ -88,7 +88,7 @@ no Next.js, no queue. When the report is written, stop.
 
 ---
 
-## Session 1 — Foundation
+## Session 1 — Foundation ✅ done
 
 **Status: done · base components outstanding**
 
@@ -123,7 +123,7 @@ from a clean clone.
 
 ---
 
-## Session 2 — calendar-core
+## Session 2 — calendar-core ✅ done
 
 **Status: done**
 
@@ -159,9 +159,13 @@ Nothing outside this package.
 
 ---
 
-## Session 3 — Public pages
+## Session 3 — Public pages ✅ done
 
-**Status: next**
+**Status: done · 3 items partial**
+
+> **Ran 2026-08-17.** Eight public pages render from the database — homepage, samples gallery with a working lightbox, pricing, FAQ, how-it-works, and three legal pages as MDX. Coin packages, product formats and the WhatsApp number all come from Postgres. 144 tests pass, including scans that fail the build if a component contains a hardcoded price, phone number, or hex colour.
+>
+> **Partial:** the sample gallery still shows placeholder gradients (real photos are Session 13), the footer has no social links (no accounts exist), and the WhatsApp button only appears on public pages (authenticated pages don't exist yet). Full acceptance-criteria detail lives with the code review, not here — `docs/02-phase-1-mvp.md` is not edited by any session.
 
 ```
 Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 1, stories

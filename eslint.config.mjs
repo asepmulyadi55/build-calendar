@@ -50,7 +50,13 @@ export default tseslint.config(
 
   // Scripts and seeds are allowed to talk to the operator.
   {
-    files: ['scripts/**/*.mjs', 'packages/db/src/seed.ts', 'apps/renderer/src/**/*.ts'],
+    files: [
+      'scripts/**/*.mjs',
+      'packages/db/src/seed.ts',
+      'apps/renderer/src/**/*.ts',
+      // Route handlers are where structured server logs are written.
+      'apps/web/src/app/api/**/*.ts',
+    ],
     rules: { 'no-console': 'off' },
   },
 

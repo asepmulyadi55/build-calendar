@@ -10,11 +10,17 @@
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@buildcalendar/calendar-core": "workspace:*",
     "@buildcalendar/db": "workspace:*",
     "@buildcalendar/ui": "workspace:*",
+    "@mdx-js/loader": "^3.1.1",
+    "@mdx-js/react": "^3.1.1",
+    "@next/mdx": "^15.5.23",
+    "@types/mdx": "^2.0.14",
     "next": "15.5.23",
     "react": "19.0.8",
-    "react-dom": "19.0.8"
+    "react-dom": "19.0.8",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.3",

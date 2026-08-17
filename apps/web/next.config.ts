@@ -1,7 +1,11 @@
+import createMDX from '@next/mdx';
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Legal pages are authored as MDX so they can be edited without touching JSX
+  // (P1-US-103).
+  pageExtensions: ['ts', 'tsx', 'mdx'],
   // The web container is capped at 400 MB (RQ-MEM-06). A standalone build keeps
   // the runtime image small enough for that to be comfortable.
   output: 'standalone',
@@ -10,4 +14,6 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ['@prisma/client'],
 };
 
-export default nextConfig;
+const withMDX = createMDX({});
+
+export default withMDX(nextConfig);

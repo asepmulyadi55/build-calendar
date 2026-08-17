@@ -8,6 +8,10 @@ pnpm-lock.yaml
 CLAUDE.md
 docs/
 design/
+
+# A verbatim copy of design/assets/ds.css. Reformatting it would make the two
+# impossible to diff, which is the only way to tell whether they have drifted.
+packages/ui/src/components.css
 .claude/
 spike/
 README.md
