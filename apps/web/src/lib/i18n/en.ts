@@ -372,6 +372,163 @@ export const en = {
     lastUpdated: 'Last updated {date}',
   },
 
+  /**
+   * Accounts (Epic 2).
+   *
+   * Every error message here is deliberately vague about whether an address is
+   * registered. Wrong password and unknown email share one string, and a repeat
+   * signup gets the same "check your email" as a new one. See `auth/errors.ts` —
+   * splitting them apart would be user enumeration on accounts that hold money.
+   */
+  auth: {
+    signIn: {
+      eyebrow: 'Welcome back',
+      title: 'Sign in to your calendars.',
+      email: 'Email',
+      emailPlaceholder: 'you@example.com',
+      password: 'Password',
+      passwordPlaceholder: '••••••••',
+      forgotPassword: 'Forgot your password?',
+      rememberMe: 'Keep me signed in for 30 days',
+      submit: 'Sign in',
+      submitting: 'Signing in…',
+      or: 'or',
+      google: 'Continue with Google',
+      noAccount: 'New here?',
+      createAccount: 'Create an account',
+    },
+
+    signUp: {
+      eyebrow: 'Free to start',
+      title: 'Make your first calendar.',
+      name: 'Name',
+      namePlaceholder: 'Your name',
+      email: 'Email',
+      emailPlaceholder: 'you@example.com',
+      whatsapp: 'WhatsApp number',
+      whatsappOptional: '(optional)',
+      whatsappPlaceholder: '+62…',
+      whatsappHint: 'Used only for order updates. Never for marketing.',
+      password: 'Password',
+      passwordPlaceholder: 'At least 8 characters',
+      termsLead: 'I agree to the ',
+      termsLink: 'Terms',
+      termsMiddle: ' and ',
+      privacyLink: 'Privacy Policy',
+      termsTail: ', and I understand that coins are non-refundable.',
+      submit: 'Create account',
+      submitting: 'Creating your account…',
+      or: 'or',
+      google: 'Continue with Google',
+      haveAccount: 'Already have an account?',
+      signInLink: 'Sign in',
+      /** Identical whether or not the address was already registered. */
+      checkYourEmail:
+        'Check your email. If we can create an account for that address, a verification link is on its way.',
+    },
+
+    password: {
+      /** Indexed by strength score, 0 to 4. */
+      strength: ['Too short', 'Weak', 'Fair', 'Good', 'Strong'],
+      strengthLabel: 'Password strength',
+      show: 'Show password',
+      hide: 'Hide password',
+    },
+
+    forgot: {
+      eyebrow: 'Password reset',
+      title: 'We will send you a link.',
+      lede: 'Enter the email you signed up with. The link works once and expires after an hour.',
+      submit: 'Send reset link',
+      submitting: 'Sending…',
+      backToSignIn: 'Back to sign in',
+      /** Identical whether or not the address exists. */
+      sent: 'Check your email. If that address has an account, a reset link is on its way.',
+    },
+
+    reset: {
+      eyebrow: 'Password reset',
+      title: 'Choose a new password.',
+      newPassword: 'New password',
+      confirmPassword: 'Confirm new password',
+      submit: 'Save new password',
+      submitting: 'Saving…',
+      done: 'Your password has been changed. You are signed in.',
+      linkInvalid:
+        'That reset link is no longer valid. Reset links work once and expire after an hour.',
+      requestAnother: 'Request another link',
+    },
+
+    verify: {
+      eyebrow: 'One more step',
+      title: 'Verify your email.',
+      lede: 'We sent a link to your inbox. You can browse and build a calendar now, but topping up and unlocking need a verified address.',
+      resend: 'Send the link again',
+      resending: 'Sending…',
+      resent: 'Sent. Check your inbox, and your spam folder.',
+      backToApp: 'Keep looking around',
+      bannerText: 'Verify your email to top up and unlock calendars.',
+      bannerAction: 'Resend link',
+    },
+
+    account: {
+      eyebrow: 'Account',
+      title: 'Your account',
+      profileHeading: 'Profile',
+      profileLede: 'Your name and WhatsApp number. Both are used only for order updates.',
+      name: 'Name',
+      whatsapp: 'WhatsApp number',
+      whatsappOptional: '(optional)',
+      email: 'Email',
+      emailLocked: 'Email cannot be changed yet. Contact us if you need to move your account.',
+      saveProfile: 'Save changes',
+      profileSaved: 'Saved.',
+
+      passwordHeading: 'Password',
+      passwordLede: 'Changing your password signs out your other devices.',
+      currentPassword: 'Current password',
+      newPassword: 'New password',
+      savePassword: 'Change password',
+      passwordSaved: 'Your password has been changed.',
+
+      dangerHeading: 'Delete account',
+      dangerLede:
+        'Your calendars, photos and exported files are removed within 7 days. Payment records are kept in anonymised form because they are financial records. This cannot be undone.',
+      dangerConfirmLabel: 'Type your email address to confirm',
+      dangerConfirmMismatch: 'That does not match the email on this account.',
+      dangerSubmit: 'Delete my account',
+      dangerSubmitting: 'Deleting…',
+      dangerDone: 'Your account is scheduled for deletion. You have been signed out.',
+
+      signOut: 'Sign out',
+      verified: 'Verified',
+      unverified: 'Not verified',
+    },
+
+    errors: {
+      /** One string for wrong password AND unknown address. Do not split. */
+      invalidCredentials: 'That email and password do not match. Check both and try again.',
+      emailNotConfirmed: 'Please verify your email address first. Check your inbox for the link.',
+      tooManyAttempts: 'Too many attempts. Please wait a few minutes and try again.',
+      rateLimited: 'Too many attempts from this connection. Please wait {seconds} seconds.',
+      linkExpired: 'That link is no longer valid. Links work once and expire after an hour.',
+      samePassword: 'That is the same as your current password. Choose a different one.',
+      generic: 'Something went wrong. Please try again, or contact us on WhatsApp.',
+      nameRequired: 'Please enter your name.',
+      emailInvalid: 'Please enter a valid email address.',
+      passwordRequired: 'Please enter a password.',
+      passwordWhitespaceOnly: 'A password cannot be only spaces.',
+      passwordTooShort: 'Use at least 8 characters.',
+      passwordTooLong: 'That password is too long. Use 72 characters or fewer.',
+      passwordMismatch: 'The two passwords do not match.',
+      termsRequired: 'Please accept the Terms and Privacy Policy to continue.',
+      whatsappInvalid: 'That does not look like an Indonesian phone number.',
+      accountDeleted: 'This account has been closed. Contact us on WhatsApp if that is a mistake.',
+      signInRequired: 'Please sign in to continue.',
+      verificationRequired: 'Please verify your email address before doing that.',
+    },
+  },
+
   health: {
     ok: 'ok',
     degraded: 'degraded',

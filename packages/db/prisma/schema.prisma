@@ -47,8 +47,12 @@ model Profile {
   /// Cache only. The ledger in `coin_transactions` is the source of truth (BR-C05).
   coinBalanceCache Int       @default(0) @map("coin_balance_cache")
   createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  /// Set when the owner requests deletion. The row survives so financial records
+  /// can be anonymised rather than orphaned; a purge job removes photos, projects
+  /// and exports within 7 days (NFR-P03).
   deletedAt        DateTime? @map("deleted_at") @db.Timestamptz(6)
 
+  @@index([deletedAt])
   @@map("profiles")
 }
 

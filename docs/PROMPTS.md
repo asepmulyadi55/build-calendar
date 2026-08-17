@@ -19,7 +19,7 @@ Every session written out. Copy the block, paste it into Claude Code from the re
 | 1 | 0 | `P1-US-001`, `003` | `assets/ds.css` | **done** · base components outstanding |
 | 2 | 0 | `P1-US-002` | — no UI | **done** |
 | 3 | 1 | `P1-US-101`–`104` | `index`, `samples`, `pricing` | **done** · 3 items partial |
-| 4 | 2 | `P1-US-201`–`203` | `signin`, `signup` | |
+| 4 | 2 | `P1-US-201`–`203` | `signin`, `signup` | **done** · 5 items partial |
 | 5 | 7 | `P1-US-702` | `admin` | |
 | 6 | 3 | `P1-US-301`, `302` | `app-new` | |
 | 7 | 3 | `P1-US-303`, `304`, `305` | `app-editor` | |
@@ -202,7 +202,13 @@ Do not begin the next epic.
 
 ---
 
-## Session 4 — Accounts and authentication
+## Session 4 — Accounts and authentication ✅ done
+
+**Status: done · 5 items partial**
+
+> **Ran 2026-08-17.** Registration, sign in and out, password reset, email verification and account settings. 197 tests pass, 50 of them on the security-critical paths: open-redirect rejection on `callbackUrl`, the rate limits from NFR-S02, the password policy, the verification gate, and seven asserting that no error message reveals whether an email is registered. The `auth.users` trigger was executed against a throwaway Postgres and copies name and phone for all four signup shapes, including Google's `full_name` and empty metadata.
+>
+> **Partial, and almost none of it is code:** custom SMTP and the Google provider are configured in the Supabase dashboard, not in this repository, so neither has been exercised end to end. Reset-token lifetime is Supabase's own setting. The verification gate is built and tested but has no call site until Epic 5 spends a coin. The NFR-P03 purge job does not exist — there is nothing to purge yet.
 
 ```
 Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 2, stories

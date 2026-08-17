@@ -15,8 +15,14 @@ export const routes = {
   privacy: '/privacy',
   refunds: '/refunds',
 
-  /** Built in later epics; linked from the marketing pages already. */
   signIn: '/signin',
+  signUp: '/signup',
+  forgotPassword: '/forgot-password',
+  resetPassword: '/reset-password',
+  verifyEmail: '/verify-email',
+  account: '/account',
+
+  /** Built in later epics; linked from the marketing pages already. */
   newProject: '/projects/new',
   coins: '/coins',
 } as const;

@@ -212,6 +212,32 @@ One consequence is worth stating separately: the hero's calendar mockup renders 
 
 ---
 
+## ADR-0010 — Judgement calls made building accounts
+
+**Date:** 2026-08 · **Status:** Accepted
+
+**Context.** Epic 2 wired Supabase Auth into the app. Five decisions were not settled by the stories, and two of them are security-relevant enough to be worth writing down rather than discovering later in a diff.
+
+**Decision.**
+
+1. **Rate limiting is in-process, not in Redis.** NFR-S02 wants login 5/min/IP and signup 3/hour/IP. Production is a single web container on one Lightsail box (ADR-0002), so one process sees every request and a `Map` is sufficient and free. This becomes wrong the moment a second web instance exists — at that point it moves to Redis, which is already running for the queue. The counters also reset on deploy, which is acceptable for a limit measured in minutes. The limiter is behind an interface and covered by ten tests, so swapping the store is a one-file change.
+
+2. **"Remember me" is implemented as a cookie lifetime, not a session length.** Supabase has no per-sign-in session duration, so the choice is recorded in an `httpOnly` cookie and the auth cookies are written with a 30-day `maxAge` when it is set, and as session cookies when it is not. Session cookies are the default because a lot of Indonesian users share or borrow devices, and "stays signed in on the family laptop" is a worse failure than "has to sign in again".
+
+3. **Account deletion is a soft delete.** `profiles.deletedAt` is set, every session is revoked through the admin API, and the row survives. Hard-deleting `auth.users` would cascade the profile away and orphan the ledger entries that NFR-P03 requires be *retained in anonymised form*. Sign-in checks the flag, because a closed account can still hold a valid token until it expires.
+
+4. **Re-authentication is required to change a password.** Not asked for by P1-US-203, and added anyway: without it, anyone who finds an unlocked laptop takes the account and the coin balance with it. The cost is one extra field.
+
+5. **Wrong password and unknown email return one identical string.** This is user enumeration, and it matters more here than on most sites: accounts hold paid balances, so confirming an address tells an attacker exactly where password stuffing is worth the effort. A repeat signup gets the same "check your email" as a new one, which is why Supabase returns an obfuscated user for that case. Seven tests assert the messages are indistinguishable; splitting them apart to be "more helpful" would undo the whole thing.
+
+**Consequences.** The verification gate — `requireVerifiedUser`, `canTopUp`, `canSpendCoins` — exists and is tested but has no call site yet, because nothing spends coins until Epic 5. That epic must call it in the top-up and unlock paths; the predicates fail closed, so forgetting to call them is the only way to get it wrong.
+
+Two things also remain outside the codebase and cannot be closed from here: custom SMTP and the Google provider are both configured in the Supabase dashboard. Until SMTP is set there, Supabase falls back to its built-in mailer, which is rate-limited to a handful of messages an hour and stops silently — §5.2's exact warning, and the failure that looks like a bug in our own code.
+
+**A bug worth recording.** Tailwind ships a `.grid { display: grid }` utility. `ds.css` styles the calendar as `table.grid` and never set a `display`, so the utility won and turned the table into a grid container, collapsing all seven day columns into one. It shipped in Epic 1 and was only caught by looking at a screenshot. `components.css` now sets `display: table` explicitly, and a test fails the build if any selector whose class collides with a Tailwind display utility omits its own `display`.
+
+---
+
 ## Template for new entries
 
 Copy the block below verbatim when adding a decision. It is shown as raw markdown on purpose — so the heading and bold syntax stay visible and copyable rather than rendering as formatting.

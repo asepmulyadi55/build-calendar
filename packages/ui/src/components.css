@@ -170,7 +170,11 @@ section{padding:clamp(56px,8vw,104px) 0}
 .months span{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.08em;
   color:var(--ink-25);padding:3px 5px;border:1px solid transparent}
 .months span.on{color:var(--ink);border-color:var(--rule);background:var(--paper-2)}
-table.grid{width:100%;border-collapse:collapse;font-family:var(--f-mono)}
+/* CHANGED from ds.css: `display:table` is explicit because Tailwind ships a
+   `.grid { display: grid }` utility. ds.css never set a display here — it had no
+   reason to — so the utility won by default and turned the calendar table into a
+   grid container, collapsing all seven day columns into one. */
+table.grid{display:table;width:100%;border-collapse:collapse;font-family:var(--f-mono)}
 table.grid th{font-size:10px;font-weight:500;letter-spacing:.1em;color:var(--ink-45);
   text-transform:uppercase;padding-bottom:9px;text-align:center}
 table.grid td{text-align:center;font-size:14px;padding:6px 0;color:var(--ink-70);
@@ -702,3 +706,30 @@ body{overflow-x:hidden}
   border-bottom:1px solid var(--rule);padding-bottom:3px;
   transition:color .16s ease,border-color .16s ease}
 .type-samples:hover{color:var(--ink);border-color:var(--ink)}
+
+/* ---------- auth ----------
+   The prototype set these inline on signin.html and signup.html. Reproduced as
+   classes so no page carries a spacing or size literal. */
+.auth-brand{margin-bottom:44px;display:inline-block}
+.auth-pane .page-title{font-size:clamp(30px,3.6vw,44px);margin:14px 0 28px}
+.auth-art-sheet{max-width:340px;width:100%}
+.auth-alt{margin-top:26px}
+.auth-alt a{color:var(--ink);border-bottom:1px solid var(--rule)}
+.auth-error{border-left:2px solid var(--merah);padding-left:14px;font-size:15px;color:var(--ink-70)}
+.auth-success{border-left:2px solid var(--ok);padding-left:14px;font-size:15px;color:var(--ink-70)}
+.field-error{font-size:13px;color:var(--merah)}
+.hint a{border-bottom:1px solid var(--rule)}
+/* Password strength meter: four segments, filled to the score. */
+.pw-meter{display:flex;gap:4px;margin-top:8px}
+.pw-meter i{flex:1;height:3px;background:var(--paper-3);border-radius:2px}
+.pw-meter i.on-1{background:var(--merah)}
+.pw-meter i.on-2{background:var(--warn)}
+.pw-meter i.on-3{background:var(--warn)}
+.pw-meter i.on-4{background:var(--ok)}
+.pw-label{margin-top:6px;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--ink-45)}
+.auth-lede{margin-bottom:28px}
+.field-optional{font-weight:400}
+.account-grid{display:grid;gap:20px;max-width:640px}
+.account-lede{margin-top:6px;margin-bottom:18px}
+.account-email{margin-bottom:18px}
+.account-verify{margin-bottom:18px}
