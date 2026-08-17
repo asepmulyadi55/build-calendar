@@ -146,52 +146,43 @@ If available hours change materially, revisit this ADR — every date in it is d
 
 ---
 
-## ADR-0008 — Skeleton choices that the specification left open
+## ADR-0008 — Modular monolith, not microservices
 
 **Date:** 2026-08 · **Status:** Accepted
 
-**Context.** P1-US-001 specifies the repository's shape but not every tool inside it. Building it surfaced six choices that had to be made one way or the other, each small enough to be invisible later and annoying to reverse.
+**Context.** The question was raised whether the web application should call a separate backend API service rather than reaching the database through its own server code, and whether the system should be split into microservices even though there is a single database.
 
-**Decision.**
+Two things were conflated and are worth separating. The browser never talks to Supabase directly — every request already goes `browser → Next.js route handler → Prisma → Supabase`, with the service-role key held only on the server. An API layer therefore already exists; it simply ships in the same deployable as the frontend.
 
-1. **pnpm workspaces, no Turborepo.** Four packages and a solo developer. Root scripts fan out with `pnpm -r`. Add a task runner when build times justify it, not before.
-2. **Tailwind v4, tokens in CSS.** `packages/ui/src/theme.css` holds an `@theme` block copied value-for-value from `design/assets/ds.css`. v4 has no `tailwind.config.js`; the CSS *is* the config. Starting on v3 would mean migrating later for nothing.
-3. **The auth bridge uses triggers, not a foreign key.** `public.profiles.id` does not carry an FK to `auth.users`. The auth schema is outside Prisma's datasource, so the constraint would read as schema drift on every `prisma migrate dev`. Two triggers on `auth.users` — insert and delete — give the same guarantee without Prisma trying to drop it. The trigger block is wrapped in a `to_regclass('auth.users') IS NULL` guard, because `prisma migrate dev` replays every migration against a shadow database that has no `auth` schema; unguarded, the migration fails with P3006 and `pnpm db:migrate` never runs at all.
-4. **The skeleton schema is only what the seed needs.** Six tables: `profiles`, `coin_packages`, `product_presets`, `templates`, `holidays`, `settings`. The transactional tables from master spec §8 arrive with the stories that own them, each with RLS in the same migration.
-5. **Only fixed-date holidays are seeded.** Ten rows across two years: Tahun Baru Masehi, Hari Buruh Internasional, Hari Lahir Pancasila, Hari Kemerdekaan Republik Indonesia, Hari Raya Natal. Every other Indonesian public holiday, and all *cuti bersama*, are set by an SKB decree published late in the preceding year. Guessing them would print wrong red dates on a calendar someone paid for. They are imported per year through the admin panel (P1-US-703).
-6. **Seeded templates are inactive.** A template is a Design JSON in R2 (AR-02) and neither `calendar-core` nor those objects exist yet. The rows exist so the shape is real; the admin activates them once a design is uploaded.
+**Decision.** Stay with a **modular monolith plus one specialised worker**. Two processes:
 
-**Consequences.** The repository runs from a clean checkout with four commands and no local database. Three things must stay true:
+1. `apps/web` — Next.js, serving pages and route handlers, holding all business logic
+2. `apps/renderer` — Node, Puppeteer and BullMQ
 
-- RLS ships in the same migration as every new table. `pnpm check:rls` fails the build otherwise, and it is verified to catch both a missing `ENABLE ROW LEVEL SECURITY` and a missing deny-all policy.
-- Holiday data is imported before each season, because the seed deliberately does not know it.
-- Both apps read the **root** `.env` through `dotenv-cli`, and Docker Compose is always invoked with `--project-directory .`. Next.js otherwise reads `apps/web/.env` and Compose otherwise reads `infra/.env` — in both cases a missing file is silent, and the process falls back to defaults that look like they work. That failure mode cost real time during this story: the renderer connected to an unrelated Redis on the default port and reported itself healthy.
+No further service splitting during Phases 1 to 3.
 
-A measurement from the spike is also now load-bearing in production config: `MALLOC_ARENA_MAX=2` is set in both Dockerfiles. Without it a long-lived Node worker's RSS climbs with every job while the JS heap stays flat (`spike/REPORT.md` §3.1). On a 1 GB box that is the difference between a bounded worker and an OOM kill.
+**Rationale.**
 
----
+*Memory settles it.* Production is a 1 GB instance (ADR-0002), already at roughly 600 MB idle. A third Node process costs another 200–300 MB. There is no room. This is arithmetic, not architectural preference.
 
-## ADR-0009 — `calendar-core` returns a serialised Fabric group, not a live one
+*Microservices solve an organisational problem.* Their primary benefit is letting independent teams deploy independently. There is one person here, so there is no coordination cost to remove — only coordination cost to add.
 
-**Date:** 2026-08 · **Status:** Accepted
+*The coin ledger needs real transactions.* Splitting payments into its own service forces a choice between distributed transactions with sagas and compensating actions — complex, error-prone, and holding customer money — or a separate database per service. Sharing one database across services instead produces a distributed monolith: the operational cost of microservices with none of the isolation.
 
-**Context.** P1-US-002 requires two things that pull against each other: `renderCalendarGridToFabric(props, scale)` must "produce a Fabric group", and the package must have **zero DOM dependencies** so it runs identically in Node and the browser.
+*Schedule.* At 8 hours a week (ADR-0007), separate deployments, logs, service contracts and cross-process debugging would plausibly add two to three months to Phase 1.
 
-Fabric cannot satisfy both. Its default entry point is the browser build; its `./node` entry pulls in `canvas` and `jsdom`. Importing either inside `calendar-core` would mean the package no longer runs identically in both places — which is the whole point of AR-01.
+**The one split that is justified.** The renderer is already a separate process, and deliberately so: Chromium has fundamentally different resource behaviour — memory spikes, long-running jobs — and a failed render must never be able to take down the web process. That is a genuine fault line, not a fashionable one.
 
-**Decision.** `renderCalendarGridToFabric` returns Fabric's own **serialised** form — a plain object `{ type: 'Group', objects: [...] }` using Fabric v6 class names (`Group`, `Text`, `Line`, `Rect`, verified against fabric 6.7.1 source). Consumers enliven it:
+**Consequences.** To keep the monolith split-ready without paying for a split now:
 
-```ts
-const [group] = await util.enlivenObjects([renderCalendarGridToFabric(props, scale)]);
-```
+- Business logic lives in modules (`src/server/modules/*` or `packages/*`), never inside route handlers.
+- Route handlers stay thin: parse, authorise, call a module function, format the response.
+- React components and pages never call Prisma directly. Always through a module function.
+- Module boundaries follow the business rules — coins, projects, exports, holidays — so a future extraction is a move, not a rewrite.
 
-The package declares no dependencies and no peer dependencies at all. Its `tsconfig.json` omits the DOM lib, so a stray `document` fails typecheck rather than review, and a test asserts the source references no DOM global, imports nothing outside the package, and never reads `Intl` or `process.env`.
+Route handlers are ordinary HTTP endpoints, so a future mobile app or third-party client can call them without any new service.
 
-Child objects are positioned relative to the group's top-left, with `originX: 'left'` and `originY: 'top'` on every child.
-
-**Consequences.** The editor and the renderer consume the identical JSON, so they cannot diverge — a stronger guarantee than sharing a function that constructs objects differently in each environment. The cost is one `enlivenObjects` call at each call site, and one thing that must be confirmed against real Fabric the first time the editor renders a grid (P1-US-401): that a group built from this JSON positions its children as intended. If Fabric's group-relative coordinate handling requires an adjustment, it is one function, and the tests pin everything else.
-
-A second decision inside the same story: **`fonts.ts` lists exactly the fonts `infra/Dockerfile.renderer` installs today** — the DejaVu and Liberation families, six in total, each annotated with the Debian package that provides it. The interface faces from `design/assets/ds.css` (Archivo, Instrument Sans, IBM Plex Mono) are deliberately absent, because they are not in the image, and a font in the picker but not in the image renders as a silent substitution that a user discovers only in a printed PDF. Adding one is a Dockerfile change plus an image rebuild, and belongs to whichever story first authors a template that needs it.
+Revisit only when a concrete trigger appears: sustained CPU or memory contention that a larger instance cannot absorb, a second engineer whose work is blocked by shared deployment, or a component with genuinely different scaling behaviour. Absent one of those, splitting further would cost throughput and buy nothing.
 
 ---
 

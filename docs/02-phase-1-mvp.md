@@ -26,47 +26,47 @@
 
 This is throwaway code. It is not architected, not tested, and not merged. Its only job is to convert the project's two riskiest assumptions into measurements. Budget two to three days.
 
-- [x] A standalone script renders one A3 sheet — one photo plus a calendar grid — to PDF via Puppeteer, using the vector path described in P1-US-601.
-- [x] Open the result in Adobe Reader: page size is exactly 303 × 426 mm (A3 + 3 mm bleed), and **text is selectable**, confirming it is vector rather than raster. — measured 303.02 × 426.13 mm, 52 extractable text objects, 3 embedded font subsets. Verified with `pdf-lib` + `pdfjs`, not by opening Adobe Reader
-- [x] Repeat for the A2 single-sheet product, which is the heaviest page in the catalog. — 426.13 × 600.03 mm
-- [x] Run the renderer in a container capped at 1 GB (`docker run -m 1g`) and record **peak RSS** via `docker stats`, for both A3 and A2. — cold 219/229 MB, warm 375/393 MB, no OOM
-- [x] Compare the measurement against the budget in `01-…` §4.2. If it exceeds the budget, apply the degradation plan in that section and record the outcome in `DECISIONS.md`. — inside budget; no degradation step needed
-- [ ] **Take the A3 PDF to a real print shop and have it printed.** Inspect color, trim alignment, and text sharpness. Confirm the shop accepts the file without complaint about color space or missing bleed. — **outstanding.** File is at `spike/out/a3-303x426mm.pdf`
-- [ ] Record all findings in `DECISIONS.md`. If the printed result is unacceptable, stop and revisit the architecture — this is the one moment where that is cheap. — partial: ADR-0008 records the `MALLOC_ARENA_MAX` finding (§3.1, already applied). Two decisions remain open — the print-derivative cap vs A2 (§3.2) and the renderer `mem_limit` (§3.3) — and the printed-result finding cannot be written until the sheet is printed
+- [ ] A standalone script renders one A3 sheet — one photo plus a calendar grid — to PDF via Puppeteer, using the vector path described in P1-US-601.
+- [ ] Open the result in Adobe Reader: page size is exactly 303 × 426 mm (A3 + 3 mm bleed), and **text is selectable**, confirming it is vector rather than raster.
+- [ ] Repeat for the A2 single-sheet product, which is the heaviest page in the catalog.
+- [ ] Run the renderer in a container capped at 1 GB (`docker run -m 1g`) and record **peak RSS** via `docker stats`, for both A3 and A2.
+- [ ] Compare the measurement against the budget in `01-…` §4.2. If it exceeds the budget, apply the degradation plan in that section and record the outcome in `DECISIONS.md`.
+- [ ] **Take the A3 PDF to a real print shop and have it printed.** Inspect color, trim alignment, and text sharpness. Confirm the shop accepts the file without complaint about color space or missing bleed.
+- [ ] Record all findings in `DECISIONS.md`. If the printed result is unacceptable, stop and revisit the architecture — this is the one moment where that is cheap.
 
 **Exit criteria:** a physical printed sheet you are happy to sell, and a peak-RSS number that fits the server. Do not begin P1-US-001 until both exist.
 
 ### P1-US-001 · Project skeleton
 **As a** developer, **I need** a repository that runs from a clean checkout.
 
-- [x] Monorepo per `01-…` §1.1 (`apps/web`, `apps/renderer`, `packages/*`).
-- [x] Docker Compose runs `web`, `renderer`, `redis`, and `caddy`. Postgres is Supabase (remote), not a local container — develop against the real thing to catch pooler and RLS issues early.
-- [x] `.env.example` lists every variable from `01-…` §6 with explanatory comments.
-- [x] `pnpm dev`, `pnpm test`, `pnpm db:migrate` all work as documented. — verified from a clean checkout
-- [x] Prisma configured with both `DATABASE_URL` and `DIRECT_URL` (`01-…` §5.1).
-- [x] Seed script creates: one admin account, three coin packages, five product presets, holidays for the current and next year, **three** sample templates (see ADR-0007 — the owner designs these alone, so three is the launch target, not six). — admin needs `SEED_ADMIN_EMAIL`/`_PASSWORD`; holidays are fixed-date only and templates seed inactive, per ADR-0008
-- [x] ESLint, Prettier, and TypeScript strict mode enforced; CI fails on type errors.
-- [x] CI check that fails if any migration creates a table without enabling RLS (`01-…` §5.3). — `pnpm check:rls`, verified to catch both a missing RLS enable and a missing deny-all policy
+- [ ] Monorepo per `01-…` §1.1 (`apps/web`, `apps/renderer`, `packages/*`).
+- [ ] Docker Compose runs `web`, `renderer`, `redis`, and `caddy`. Postgres is Supabase (remote), not a local container — develop against the real thing to catch pooler and RLS issues early.
+- [ ] `.env.example` lists every variable from `01-…` §6 with explanatory comments.
+- [ ] `pnpm dev`, `pnpm test`, `pnpm db:migrate` all work as documented.
+- [ ] Prisma configured with both `DATABASE_URL` and `DIRECT_URL` (`01-…` §5.1).
+- [ ] Seed script creates: one admin account, three coin packages, five product presets, holidays for the current and next year, **three** sample templates (see ADR-0007 — the owner designs these alone, so three is the launch target, not six).
+- [ ] ESLint, Prettier, and TypeScript strict mode enforced; CI fails on type errors.
+- [ ] CI check that fails if any migration creates a table without enabling RLS (`01-…` §5.3).
 
 ### P1-US-002 · The `calendar-core` package
 **As a** system, **I need** one calendar layout library so the editor and renderer cannot diverge.
 
-- [x] `buildMonthMatrix(year, month, weekStart)` returns a 6×7 matrix including leading/trailing days.
-- [x] `resolveHolidays(year, month, holidays)` maps dates to holiday entries.
-- [x] Indonesian month and weekday name tables, **hardcoded with no locale parameter**. `calendar-core` renders `id-ID` and only `id-ID` (master §10.7).
-- [x] TypeScript types for Design JSON (`CalendarDesign`, `Sheet`, `SlotDefinition`, `CalendarGridObject`) carrying `schemaVersion`.
-- [x] `renderCalendarGridToFabric(props, scale)` produces a Fabric group. — returns Fabric's serialised form; see ADR-0009
-- [x] `mmToPx(mm, dpi)` and `pxToMm(px, dpi)`.
-- [x] `fonts.ts` — the single font allowlist shared by the editor picker and the renderer image (`01-…` §5.5). — lists what the image installs today; see ADR-0009
-- [x] Unit tests: leap-year February, months starting on Sunday, Monday vs Sunday week start, multiple holidays on one date.
-- [x] **Zero DOM dependencies** so it runs in Node and the browser identically.
+- [ ] `buildMonthMatrix(year, month, weekStart)` returns a 6×7 matrix including leading/trailing days.
+- [ ] `resolveHolidays(year, month, holidays)` maps dates to holiday entries.
+- [ ] Indonesian month and weekday name tables, **hardcoded with no locale parameter**. `calendar-core` renders `id-ID` and only `id-ID` (master §10.7).
+- [ ] TypeScript types for Design JSON (`CalendarDesign`, `Sheet`, `SlotDefinition`, `CalendarGridObject`) carrying `schemaVersion`.
+- [ ] `renderCalendarGridToFabric(props, scale)` produces a Fabric group.
+- [ ] `mmToPx(mm, dpi)` and `pxToMm(px, dpi)`.
+- [ ] `fonts.ts` — the single font allowlist shared by the editor picker and the renderer image (`01-…` §5.5).
+- [ ] Unit tests: leap-year February, months starting on Sunday, Monday vs Sunday week start, multiple holidays on one date.
+- [ ] **Zero DOM dependencies** so it runs in Node and the browser identically.
 
 ### P1-US-003 · Design system
-- [x] Palette, type scale, radii, and spacing defined as Tailwind tokens. — `packages/ui/src/theme.css`, values copied from `design/assets/ds.css`
-- [ ] Base components: Button, Input, Card, Modal, Toast, Tabs, Badge, EmptyState, Skeleton. — **not built.** Five (Button, Input, Card, Modal, Badge) have a design in `design/assets/ds.css` and can be built now. Four (Toast, Tabs, EmptyState, Skeleton) appear nowhere in `design/` and need designing first. First consumer is Epic 2 (auth screens), not Epic 1 — public pages are built last
-- [x] Light mode only; dark mode out of scope.
-- [x] All **application** strings routed through a single `en.ts` file. No string hardcoded inline.
-- [x] **Calendar output strings** (month names, weekday labels) live in `calendar-core`, never in `en.ts`. Keeping them separate is what prevents the English interface from leaking onto the printed sheet. — enforced by tests on both sides
+- [ ] Palette, type scale, radii, and spacing defined as Tailwind tokens.
+- [ ] Base components: Button, Input, Card, Modal, Toast, Tabs, Badge, EmptyState, Skeleton.
+- [ ] Light mode only; dark mode out of scope.
+- [ ] All **application** strings routed through a single `en.ts` file. No string hardcoded inline.
+- [ ] **Calendar output strings** (month names, weekday labels) live in `calendar-core`, never in `en.ts`. Keeping them separate is what prevents the English interface from leaking onto the printed sheet.
 
 ---
 

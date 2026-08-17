@@ -721,11 +721,31 @@ body{overflow-x:hidden}
   .save-state{display:none}
 }
 
+/* ---------- editor chrome follows the editor ----------
+   Below 1023px the canvas is replaced by a notice, so the editing tools
+   in the top bar must go with it. Leaving them behind produced a squashed
+   title field and two cramped buttons duplicating the actions already
+   offered in the notice card. */
+@media(max-width:1023px){
+  .editor-nav .nav-in{justify-content:space-between}
+  .editor-nav .row,
+  .editor-nav .project-title,
+  .editor-nav .save-state,
+  .editor-nav .nav-cta{display:none}
+}
+
+/* Navs without a hamburger (sitemap, project plan) carry two buttons that
+   only just fit at 440px. Let the bar wrap rather than overflow. */
+@media(max-width:560px){
+  .nav-in{flex-wrap:wrap;height:auto;padding-block:10px;gap:10px}
+  .nav-cta{flex-wrap:wrap}
+}
+
 </style>
 </head>
 <body>
 <div class="proto">Prototype — every button links to a real page · <a href="sitemap.html">See all screens</a></div>
-<nav class="nav"><div class="wrap nav-in">
+<nav class="nav editor-nav"><div class="wrap nav-in">
   <a class="brand" href="app.html">Build<span>Calendar</span></a>
   <div class="row" style="gap:14px;margin-left:24px">
     <input class="input project-title" value="Keluarga 2027">

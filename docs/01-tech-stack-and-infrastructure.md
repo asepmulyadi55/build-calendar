@@ -264,6 +264,24 @@ The unlock path is the one place where a bug costs real money. Two simultaneous 
 
 ## 6. Environment Variables
 
+### 6.1 Obtaining R2 credentials
+
+Cloudflare dashboard → **R2 Object Storage** → **Overview**.
+
+1. **Account ID** is in the right-hand panel, 32 hex characters.
+2. Under **Account Details**, select **Manage** next to API Tokens, then **Create API Token**.
+   - Permission: **Object Read & Write**
+   - Scope: **specify the bucket**, never "all buckets"
+   - The Access Key ID and Secret Access Key are shown **once only**. Copy them immediately; if missed, delete the token and create another.
+3. The S3 endpoint is derived from the Account ID: `https://<account-id>.r2.cloudflarestorage.com`. Do not append the bucket name — the bucket is a separate SDK parameter.
+4. `R2_REGION` is `auto`. The SDK requires a region; R2 ignores it.
+
+Create two buckets: one for application assets, one for database backups. **Issue separate API tokens for each**, so a leak of the application key does not also expose the backups.
+
+`R2_PUBLIC_BASE_URL` is for genuinely public assets only — template thumbnails and marketing images, served through a custom domain on the bucket. **User photos, exports, and payment proofs are private** and reachable only through signed URLs (NFR-S04); they never go through this base URL. Leave the variable empty until a domain exists. The built-in `r2.dev` subdomain is rate-limited and not intended for production.
+
+### 6.2 The variables
+
 ```bash
 # App
 SITE_NAME="BuildCalendar"
@@ -277,12 +295,14 @@ DATABASE_URL="...pooler...:6543/postgres?pgbouncer=true"
 DIRECT_URL="...:5432/postgres"
 
 # Cloudflare R2
-R2_ACCOUNT_ID="..."
-R2_ACCESS_KEY_ID="..."
-R2_SECRET_ACCESS_KEY="..."
+R2_ACCOUNT_ID="8f4c2a1b9e7d6035f1a8c4b2d9e60371"
+R2_ENDPOINT="https://8f4c2a1b9e7d6035f1a8c4b2d9e60371.r2.cloudflarestorage.com"
+R2_REGION="auto"
+R2_ACCESS_KEY_ID="1a2b3c4d5e6f70819a2b3c4d5e6f7081"
+R2_SECRET_ACCESS_KEY="7d3f9b2e5c8a1046f2b7d4e9a3c6081b5f2e8d1a4c7b0369e2f5a8d1b4c70e93"
 R2_BUCKET="kalender-assets"
 R2_BACKUP_BUCKET="kalender-backups"
-R2_PUBLIC_BASE_URL="https://cdn..."
+R2_PUBLIC_BASE_URL=""                  # only once a custom domain exists
 
 # Queue
 REDIS_URL="redis://redis:6379"
@@ -298,6 +318,8 @@ RENDERER_SHARED_SECRET="..."
 # Observability
 SENTRY_DSN="..."
 ```
+
+The R2 values above are correctly formatted examples, not real credentials.
 
 ---
 

@@ -11,12 +11,12 @@ Derived from **8 hours per week, one person doing everything** (ADR-0007). Every
 
 Indonesians buy next year's calendar between **October and December**. That is the only window that matters.
 
-|                                    |                                  |
-| ---------------------------------- | -------------------------------- |
-| Phase 1 effort                     | ~320 hours                       |
-| Template design (owner, 3 designs) | ~20 hours                        |
-| Available                          | 8 hours/week                     |
-| **Duration**                       | **~42 weeks — about ten months** |
+| | |
+|---|---|
+| Phase 1 effort | ~320 hours |
+| Template design (owner, 3 designs) | ~20 hours |
+| Available | 8 hours/week |
+| **Duration** | **~42 weeks — about ten months** |
 
 Selling 2027 calendars would need the site live by mid-October 2026. Even cutting to desk calendars only, three designs, and no admin panel lands in January 2027 — after the window closes.
 
@@ -52,22 +52,22 @@ Two things this says that a standard waterfall chart does not:
 
 ## 3. Timeline
 
-| Month            | Development                                            | Running alongside                                    |
-| ---------------- | ------------------------------------------------------ | ---------------------------------------------------- |
-| **Sep 2026**     | Spike (3 days) → foundation, `calendar-core` begins    | Print vendor sourcing · **QRIS registration starts** |
-| **Oct 2026**     | Foundation + `calendar-core`                           | Template design begins · QRIS                        |
-| **Nov 2026**     | `calendar-core` complete                               | Template design · QRIS                               |
-| **Dec 2026**     | Auth and accounts                                      | Template design                                      |
-| **Jan 2027**     | Templates, editor, uploads                             | Template design                                      |
-| **Feb 2027**     | Templates, editor, uploads                             | **3 templates finished**                             |
-| **Mar 2027**     | Renderer                                               |                                                      |
-| **Apr 2027**     | Renderer + preview                                     |                                                      |
-| **May 2027**     | Preview + print-readiness checks                       |                                                      |
-| **Jun 2027**     | Coins, payments, unlock                                | Legal copy · holiday data                            |
-| **Jul 2027**     | Export + minimal admin                                 | Legal copy · holiday data                            |
-| **Aug 2027**     | Security pass, backups, ops readiness, **5-user test** | Holiday data for 2028                                |
-| **Sep 2027**     | **Soft launch** — quiet month, real money              | Marketing pages, SEO                                 |
-| **Oct–Dec 2027** | **Season — sell**                                      | Support, print requests by WhatsApp                  |
+| Month | Development | Running alongside |
+|---|---|---|
+| **Sep 2026** | Spike (3 days) → foundation, `calendar-core` begins | Print vendor sourcing · **QRIS registration starts** |
+| **Oct 2026** | Foundation + `calendar-core` | Template design begins · QRIS |
+| **Nov 2026** | `calendar-core` complete | Template design · QRIS |
+| **Dec 2026** | Auth and accounts | Template design |
+| **Jan 2027** | Templates, editor, uploads | Template design |
+| **Feb 2027** | Templates, editor, uploads | **3 templates finished** |
+| **Mar 2027** | Renderer | |
+| **Apr 2027** | Renderer + preview | |
+| **May 2027** | Preview + print-readiness checks | |
+| **Jun 2027** | Coins, payments, unlock | Legal copy · holiday data |
+| **Jul 2027** | Export + minimal admin | Legal copy · holiday data |
+| **Aug 2027** | Security pass, backups, ops readiness, **5-user test** | Holiday data for 2028 |
+| **Sep 2027** | **Soft launch** — quiet month, real money | Marketing pages, SEO |
+| **Oct–Dec 2027** | **Season — sell** | Support, print requests by WhatsApp |
 
 Phase 2 (print checkout) is built in the 2028 quiet season, and only if WhatsApp click data justifies it. Phase 3 (custom editor) is roughly 12 weeks and belongs between January and August 2028.
 

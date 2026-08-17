@@ -1,14 +1,42 @@
 # Prompts for Claude Code
 
-Copy a prompt, paste it into Claude Code from the repository root, run one per session.
+Every session written out. Copy the block, paste it into Claude Code from the repository root, run one per sitting.
 
-`CLAUDE.md` is read automatically every session, so these prompts stay short on purpose. If you find yourself pasting the same context repeatedly, that context belongs in `CLAUDE.md`, not in a prompt.
+`CLAUDE.md` loads automatically every session and the skills load when the work matches, so prompts stay short on purpose. If you find yourself pasting the same context repeatedly, that context belongs in `CLAUDE.md` or in a skill — not in a prompt.
+
+**Two rules that prevent almost every mistake:**
+
+- The hundreds digit of a story ID is its epic number. `P1-US-2xx` is always Epic 2.
+- Never rewrite the closing instructions. They live in the `finish-epic` skill so there is exactly one copy to keep correct.
 
 ---
 
-## Session 0 — The spike (do this first)
+## Session map
 
-This is throwaway code whose only job is to turn the project's two riskiest assumptions into measurements. Do not skip it and do not let it become the real renderer.
+| Session | Epic | Stories | Design pages |
+|---|---|---|---|
+| 0 | — | `P1-US-000` | — throwaway spike |
+| 1 | 0 | `P1-US-001`, `003` | `assets/ds.css` |
+| 2 | 0 | `P1-US-002` | — no UI |
+| 3 | 1 | `P1-US-101`–`104` | `index`, `samples`, `pricing` |
+| 4 | 2 | `P1-US-201`–`203` | `signin`, `signup` |
+| 5 | 7 | `P1-US-702` | `admin` |
+| 6 | 3 | `P1-US-301`, `302` | `app-new` |
+| 7 | 3 | `P1-US-303`, `304`, `305` | `app-editor` |
+| 8 | 6 | `P1-US-601` | — renderer, no UI |
+| 9 | 4 | `P1-US-401`, `402` | `app-preview` |
+| 10 | 5 | `P1-US-501`, `502`, `503` | `app-coins`, `admin` |
+| 11 | 6 | `P1-US-602`, `603` | `app-export` |
+| 12 | 7 | `P1-US-701`, `703` | `admin` |
+| 13 | 1 | `P1-US-105` + real sample images | `index`, `app-preview` |
+
+Two orderings are deliberate. **Session 5 builds template management before the editor**, because without templates in the database the editor has nothing to open and cannot be tested. **Session 13 comes last** because it needs project codes and real print screenshots, neither of which exists earlier.
+
+---
+
+## Session 0 — The spike
+
+Throwaway code whose only job is to turn the project's two riskiest assumptions into measurements. Do not let it become the real renderer.
 
 ```
 Read CLAUDE.md, then docs/02-phase-1-mvp.md story P1-US-000, then
@@ -20,39 +48,34 @@ numbers.
 
 1. Can Puppeteer produce a genuinely print-ready PDF?
    - Render one A3 sheet: a placeholder photo plus a January 2027
-     calendar grid in Bahasa Indonesia (Januari, Sen–Min, 1 Jan =
+     calendar grid in Bahasa Indonesia (Januari, Sen-Min, 1 Jan =
      Tahun Baru Masehi, Sundays red).
    - Page size must be exactly 303 x 426 mm (A3 plus 3 mm bleed on
      all sides).
    - Text must stay vector, not raster.
-   - Use the SVG-into-HTML-into-page.pdf approach described in
-     P1-US-601, not a screenshot.
-   - Repeat for A2 single sheet (426 x 600 mm), which is the heaviest
-     page in the catalogue.
+   - Use the SVG-into-HTML-into-page.pdf approach from P1-US-601,
+     not a screenshot.
+   - Repeat for A2 single sheet (426 x 600 mm), the heaviest page.
 
 2. Does it fit in 1 GB of RAM?
-   - Provide a Dockerfile and a command that runs the renderer under
+   - Provide a Dockerfile and a command that runs under
      `docker run -m 1g`.
    - Report peak RSS for both A3 and A2 via docker stats.
    - Compare against the budget table in section 4.2.
 
-Deliverables:
-- /spike with a README explaining how to run it
-- Two PDFs in /spike/out
-- A short written report: measured page dimensions, whether text is
-  selectable, peak RSS for each format, and whether it fits budget.
+Deliverables: /spike with a README, two PDFs in /spike/out, and a
+short report covering measured page dimensions, whether text is
+selectable, peak RSS per format, and whether it fits budget.
 
-Do not build any part of the real application. Do not add Prisma,
-Supabase, Next.js, or a queue. When the report is written, stop.
+Do not build any part of the real application. No Prisma, no Supabase,
+no Next.js, no queue. When the report is written, stop.
 ```
 
-**Your job after this session:** open both PDFs in a real PDF reader, confirm the page size and that you can select the text. Then take the A3 file to an actual print shop and have it printed. Look at the colour, the trim, and the sharpness of the small type. If you would not sell that sheet, stop and tell me — the architecture needs rethinking, and this is the cheapest moment to find out.
+**Check by hand:** open both PDFs, confirm the page size and that you can select the text. Then print the A3 at a real print shop and inspect colour, trim, and small type. If you would not sell that sheet, stop and rethink the architecture.
 
 ---
 
 ## Session 1 — Foundation
-
-Only start once the spike's exit criteria are met.
 
 ```
 Read CLAUDE.md and docs/02-phase-1-mvp.md stories P1-US-001 and
@@ -60,19 +83,17 @@ P1-US-003.
 
 Build the repository skeleton only. No product features.
 
-Scope:
 - Monorepo per section 1.1 of docs/01-tech-stack-and-infrastructure.md
 - Docker Compose for web, renderer, redis, caddy. Postgres is remote
   Supabase, not a local container.
 - Prisma configured with both DATABASE_URL and DIRECT_URL
 - .env.example listing every variable from section 6, each commented
-- pnpm dev / test / db:migrate / db:seed all working from a clean
-  checkout
+- pnpm dev / test / db:migrate / db:seed working from a clean checkout
 - ESLint, Prettier, TypeScript strict, CI failing on type errors
-- A CI check that fails if any migration creates a table in the public
+- A CI check that fails if a migration creates a table in the public
   schema without enabling RLS
-- Design tokens in Tailwind config, extracted from design/assets/ds.css
-  (colours, type scale, spacing, radii). Do not invent new values.
+- Design tokens in the Tailwind config, extracted from
+  design/assets/ds.css. Do not invent new values.
 
 Do not build calendar-core, auth, or any page beyond a health check.
 Finish by writing the README setup steps and verifying them yourself
@@ -83,88 +104,422 @@ from a clean clone.
 
 ## Session 2 — calendar-core
 
-The most important package in the project. Everything else renders through it.
-
 ```
 Read CLAUDE.md and docs/02-phase-1-mvp.md story P1-US-002.
 
-Build packages/calendar-core. This package must have zero DOM
-dependencies so it runs identically in Node and the browser.
+Build packages/calendar-core. Zero DOM dependencies, so it runs
+identically in Node and the browser.
 
-Required:
 - buildMonthMatrix(year, month, weekStart)
 - resolveHolidays(year, month, holidays)
 - Design JSON types with schemaVersion
 - renderCalendarGridToFabric(props, scale)
 - mmToPx / pxToMm
 - Indonesian month and weekday tables, hardcoded, with NO locale
-  parameter (see CLAUDE.md, language section)
+  parameter
 - fonts.ts as the single font allowlist
 
 Write the tests first: leap-year February, a month starting on Sunday,
-Monday vs Sunday week start, and two holidays falling on one date.
+Monday vs Sunday week start, and two holidays on one date.
 
 Nothing outside this package.
 ```
 
 ---
 
-## Reusable template for every later epic
+## Session 3 — Public pages
 
 ```
-Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic <N>, stories
-<IDs>.
+Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 1, stories
+P1-US-101, P1-US-102, P1-US-103, P1-US-104.
 
-Implement only those stories. For each one, work through its
-acceptance criteria in order and make every checkbox genuinely true.
+Implement only those stories. Work through the acceptance criteria in
+order and make every checkbox genuinely true.
 
-Before implementing, write tests for any rule tagged BR-* or
-RQ-MEM-* that these stories touch.
+Write tests before implementing anything tagged BR-* or RQ-MEM-*.
 
-Match the visual design in design/<relevant>.html. Use the tokens
-already in the Tailwind config; do not introduce new colours, sizes,
-or spacing values.
+Match the visual design in design/index.html for the homepage,
+design/samples.html for the gallery, and design/pricing.html for the
+pricing page. Use the tokens already in the Tailwind config; introduce
+no new colours, sizes, or spacing.
 
-When finished:
-1. List each acceptance criterion and state whether it passes
-2. List what a human reviewer should check by hand
-3. Note anything ambiguous you decided, and append an ADR to
-   docs/DECISIONS.md
+Three things specific to this epic:
 
+- The sample gallery uses placeholder gradients for now. Real print
+  screenshots replace them in Session 13. Build the gallery from data
+  so swapping them is a data change, not a markup change.
+- Coin packages come from the database and the WhatsApp number comes
+  from settings. Nothing on these pages is hardcoded.
+- Keep the coin explainer copy as written in the prototype. It is the
+  most conversion-critical block on the site and the wording was
+  chosen deliberately.
+
+Skip P1-US-105 — it needs project codes that do not exist yet.
+
+When the code is finished, run /finish-epic and follow it exactly.
+Do not begin the next epic.
+```
+
+**Check by hand:** read the pricing page as if you had never seen the product. Does the coin mechanic make sense on one read?
+
+---
+
+## Session 4 — Accounts and authentication
+
+```
+Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 2, stories
+P1-US-201, P1-US-202, P1-US-203.
+
+Implement only those stories. Work through the acceptance criteria in
+order and make every checkbox genuinely true.
+
+Write tests before implementing anything tagged BR-* or RQ-MEM-*.
+
+Match the visual design in design/signin.html and design/signup.html.
+Use the tokens already in the Tailwind config; introduce no new
+colours, sizes, or spacing.
+
+Four things specific to this epic:
+
+- Configure custom SMTP before testing anything. Supabase's built-in
+  mailer is rate-limited to a handful of messages per hour and is not
+  for production; verification emails will silently stop arriving and
+  it will look like a bug in your own code.
+- Add the Postgres trigger on auth.users that creates the matching
+  public.profiles row.
+- An unverified user may sign in but must not be able to top up or
+  unlock. Enforce that on the server, not only in the UI.
+- Error messages must never reveal whether an email is registered.
+
+When the code is finished, run /finish-epic and follow it exactly.
+Do not begin the next epic.
+```
+
+**Check by hand:** sign up with a real address and confirm the email arrives. Then try to reach a top-up endpoint before verifying.
+
+---
+
+## Session 5 — Template management
+
+Built before the editor on purpose: without templates in the database, the editor has nothing to open.
+
+```
+Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 7, story
+P1-US-702.
+
+Implement only that story. Work through the acceptance criteria in
+order and make every checkbox genuinely true.
+
+Match the visual design in design/admin.html. Use the tokens already
+in the Tailwind config; introduce no new colours, sizes, or spacing.
+
+Three things specific to this story:
+
+- Phase 3 does not exist, so template authoring is file-based: the
+  admin drops a Design JSON plus assets and the panel imports them.
+  Document the format in docs/template-format.md.
+- Validate on import: the JSON matches the schema, sheet count matches
+  the product preset, and every slot has a unique id. Reject with a
+  clear message rather than storing something broken.
+- Seed three templates, not six. The owner designs these alone
+  (ADR-0007).
+
+When the code is finished, run /finish-epic and follow it exactly.
 Do not begin the next epic.
 ```
 
 ---
 
+## Session 6 — Choosing a format and a design
+
+```
+Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 3, stories
+P1-US-301 and P1-US-302.
+
+Implement only those stories. Work through the acceptance criteria in
+order and make every checkbox genuinely true.
+
+Match the visual design in design/app-new.html. Use the tokens already
+in the Tailwind config; introduce no new colours, sizes, or spacing.
+
+Three things specific to these stories:
+
+- Selecting a template COPIES its Design JSON into the new project. It
+  is never a reference. A later change to a template must not alter
+  anyone's existing calendar.
+- "Start from scratch" is rendered disabled with a "Coming soon"
+  label. Do not build it — that is Phase 3.
+- A signed-out visitor who picks a template goes to
+  /signin?callbackUrl=... and lands back on the same choice.
+
+When the code is finished, run /finish-epic and follow it exactly.
+Do not begin the next epic.
+```
+
+---
+
+## Session 7 — The template editor
+
+The largest session in Phase 1. Splitting it across two sittings is sensible: `P1-US-303` first, then `304` and `305`.
+
+```
+Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 3, stories
+P1-US-303, P1-US-304, P1-US-305.
+
+Implement only those stories. Work through the acceptance criteria in
+order and make every checkbox genuinely true.
+
+Match the visual design in design/app-editor.html. Use the tokens
+already in the Tailwind config; introduce no new colours, sizes, or
+spacing.
+
+Five things specific to this epic:
+
+- Only objects listed in slot_schema are editable. Everything else is
+  locked and not selectable.
+- Uploads: validate by magic bytes, strip all EXIF including GPS,
+  produce three derivatives, discard the original. These are family
+  photos; leaked EXIF is a home address.
+- The calendar grid is generated by calendar-core, never an image, and
+  always renders in Bahasa Indonesia.
+- The month selector displays the printed value — "Januari", not
+  "January" — while its label stays English.
+- Below 1024px, show the small-screen notice from the prototype. Do
+  not attempt a phone editor.
+
+When the code is finished, run /finish-epic and follow it exactly.
+Do not begin the next epic.
+```
+
+**Check by hand:** upload a photo taken on your own phone and confirm the stored derivatives contain no GPS data.
+
+---
+
+## Session 8 — The renderer
+
+```
+Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 6, story
+P1-US-601, and section 4.2 of
+docs/01-tech-stack-and-infrastructure.md.
+
+Implement only that story. Work through the acceptance criteria in
+order and make every checkbox genuinely true.
+
+This story is governed by RQ-MEM-01 through RQ-MEM-08. Write the
+memory regression test before the implementation: render the A2 single
+sheet in a container capped at 1 GB and assert that it completes.
+
+Reuse what the Session 0 spike proved. Do not copy the spike's code —
+it was throwaway — but do not rediscover its findings either.
+
+The output must match the spike's verified result: exact page size
+including bleed, vector text, embedded fonts, and no outbound network
+access during rendering.
+
+When the code is finished, run /finish-epic and follow it exactly.
+Do not begin the next epic.
+```
+
+**Check by hand:** run an export while watching `docker stats`. Confirm Chromium disappears about a minute after the job finishes.
+
+---
+
+## Session 9 — Preview and print checks
+
+```
+Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 4, stories
+P1-US-401 and P1-US-402.
+
+Implement only those stories. Work through the acceptance criteria in
+order and make every checkbox genuinely true.
+
+Match the visual design in design/app-preview.html. Use the tokens
+already in the Tailwind config; introduce no new colours, sizes, or
+spacing.
+
+Three things specific to these stories:
+
+- The preview is rendered server-side by the SAME engine as export
+  (AR-01). Do not build a second, faster preview path — a preview that
+  can disagree with the export defeats the entire purpose.
+- The watermark on locked projects must not be removable by editing
+  CSS in the browser.
+- Cache previews by Design JSON hash. On a 1 GB server, re-rendering
+  an unchanged sheet is expensive.
+
+When the code is finished, run /finish-epic and follow it exactly.
+Do not begin the next epic.
+```
+
+---
+
+## Session 10 — Coins, payments, unlocking
+
+The only part of this codebase that moves real money. The `coin-ledger` skill loads automatically; follow it exactly.
+
+```
+Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 5, stories
+P1-US-501, P1-US-502, P1-US-503.
+
+Implement only those stories. Work through the acceptance criteria in
+order and make every checkbox genuinely true.
+
+Write these tests FIRST, before any implementation, and run them
+against a real Postgres rather than a mock — the guarantees being
+tested are database guarantees:
+
+- two concurrent unlock requests on the same project deduct exactly
+  one coin
+- unlocking an already-unlocked project succeeds and deducts nothing
+- a failed first export produces a compensating refund entry
+- the cached balance equals the sum of the ledger after a random
+  sequence of operations
+
+Match the visual design in design/app-coins.html for the user side and
+design/admin.html for the verification queue.
+
+Two things that are not negotiable:
+
+- The partial unique index on (project_id) where reason='unlock' goes
+  in a migration. The database prevents double-spend, not an if
+  statement.
+- Coins are charged only after the first export job succeeds. Until
+  then the project sits in 'unlocking'.
+
+When the code is finished, run /finish-epic and follow it exactly.
+Do not begin the next epic.
+```
+
+**Check by hand:** open the unlock button in two browser tabs and click both as fast as you can. The balance must drop by exactly one.
+
+---
+
+## Session 11 — Export and delivery
+
+```
+Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 6, stories
+P1-US-602 and P1-US-603.
+
+Implement only those stories. Work through the acceptance criteria in
+order and make every checkbox genuinely true.
+
+Match the visual design in design/app-export.html. Use the tokens
+already in the Tailwind config; introduce no new colours, sizes, or
+spacing.
+
+Three things specific to these stories:
+
+- Queue concurrency is 1, so the UI must show queue position rather
+  than only "processing". A user waiting behind someone else's A2
+  render needs to understand why.
+- Locked projects may download a watermarked low-resolution sample
+  PDF. This is deliberate: it lets people trust the output before
+  paying.
+- Every past export stays downloadable at no cost, forever. Signed
+  links expire; regenerate them silently rather than making the user
+  ask.
+
+P1-US-603 includes automated tests for page dimensions across every
+product preset. Write those. The physical print check is mine to do.
+
+When the code is finished, run /finish-epic and follow it exactly.
+Do not begin the next epic.
+```
+
+**Check by hand:** print one real desk calendar and one real A3 at an actual print shop. Inspect colour, trim alignment, and text sharpness.
+
+---
+
+## Session 12 — Admin panel
+
+```
+Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 7, stories
+P1-US-701 and P1-US-703.
+
+Implement only those stories. Work through the acceptance criteria in
+order and make every checkbox genuinely true.
+
+Match the visual design in design/admin.html. Use the tokens already
+in the Tailwind config; introduce no new colours, sizes, or spacing.
+
+Three things specific to these stories:
+
+- Coin packages, product presets, holidays and site settings are all
+  editable here. Nothing they control may remain hardcoded anywhere in
+  the codebase — this session is where that gets proven.
+- Manual balance adjustments require a reason and write to audit_logs.
+  No anonymous balance changes, ever.
+- Admin routes are guarded by role middleware and excluded from search
+  engine indexing.
+
+Load holiday data for 2027 and 2028 as part of the seed.
+
+When the code is finished, run /finish-epic and follow it exactly.
+Do not begin the next epic.
+```
+
+---
+
+## Session 13 — Print requests and real samples
+
+Last because it needs project codes and real print output, neither of which existed earlier.
+
+```
+Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 1, story
+P1-US-105.
+
+Implement only that story. Work through the acceptance criteria in
+order and make every checkbox genuinely true.
+
+This story is a WhatsApp deep link and nothing more. It is roughly
+four hours of work replacing about 120 hours of Phase 2 checkout
+(ADR-0007).
+
+Do not build address forms, shipping calculations, order records, or
+"a small version" of checkout. A half-built checkout is worse than an
+honest manual one. If you believe one is needed, say so and stop.
+
+Also replace the placeholder gradients in the sample gallery with the
+real print screenshots now available, using the data-driven structure
+built in Session 3.
+
+When the code is finished, run /finish-epic and follow it exactly.
+```
+
+---
+
+## Before accepting the first real payment
+
+Not a build session. Run both of these, then work through the checklist.
+
+```
+/security-review
+```
+
+```
+/audit-drift
+```
+
+Then complete the pre-launch checklist in section 7 of `docs/01-tech-stack-and-infrastructure.md`. The two items people skip are the ones that matter most: a database restore you have actually performed, and five real people using the product unaided while you watch in silence.
+
+---
+
 ## When something feels wrong
 
-Use this instead of arguing feature by feature. It is far cheaper to catch drift early than to unpick it later.
+Run `/audit-drift`. It is read-only and reports violations without fixing them. Use it when a session's output feels off, before a long break, and every few sessions as routine hygiene.
 
-```
-Do not write code this session.
-
-Review the current state of the repository against CLAUDE.md and
-docs/02-phase-1-mvp.md. Report:
-
-1. Any non-negotiable in CLAUDE.md that the code violates
-2. Any hardcoded value that belongs in settings, product_presets,
-   or coin_packages
-3. Any acceptance criterion previously reported as done that is not
-   actually satisfied
-4. Any dependency added without justification
-5. Anything built that belongs to Phase 2, 3, or 4
-
-Be specific: file and line. Do not fix anything yet.
-```
+The section worth reading most carefully is overclaimed completeness — acceptance criteria previously reported as done that turn out not to be.
 
 ---
 
 ## Notes on working this way
 
-**One epic per session.** With 8 hours a week this is also roughly one session's worth of review capacity, which is not a coincidence. The limit is your ability to check the work, not the agent's ability to produce it.
+**One session per sitting.** At 8 hours a week this is also about one sitting's worth of review capacity, which is not a coincidence. The limit is your ability to check the work, not the agent's ability to produce it.
 
-**Review at the end of every epic, never later.** Letting several epics accumulate unreviewed is the single most common way a month disappears on a project like this.
+**Review at the end of every session, never later.** Letting several accumulate unreviewed is the most common way a month disappears on a project like this.
 
-**When the agent proposes something clever, check `DECISIONS.md` first.** Most of the constraints in this project look like inefficiencies until you know the reason. A warm Chromium pool is faster right up until it takes the website down.
+**When the agent proposes something clever, check `docs/DECISIONS.md` first.** Most constraints here look like inefficiencies until you know the reason. A warm Chromium pool is faster right up until it takes the website down.
 
 **Keep the spike's report.** When you later wonder whether the 1 GB server was ever a real constraint, that measurement is the answer.
+
+**If a session runs long, split it rather than rushing.** Session 7 in particular is fine across two sittings.
