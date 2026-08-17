@@ -15,10 +15,12 @@
     "seed": "dotenv -e ../../.env -- tsx src/seed.ts",
     "studio": "dotenv -e ../../.env -- prisma studio",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "templates": "tsx scripts/make-templates.mjs"
   },
   "dependencies": {
-    "@prisma/client": "6.19.3"
+    "@prisma/client": "6.19.3",
+    "@buildcalendar/calendar-core": "workspace:*"
   },
   "devDependencies": {
     "dotenv-cli": "11.0.0",

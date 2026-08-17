@@ -82,3 +82,11 @@ export {
   type FabricRectObject,
   type FabricTextObject,
 } from './fabric-grid';
+
+export {
+  validateCalendarDesign,
+  type PresetConstraints,
+  type ValidationCode,
+  type ValidationIssue,
+  type ValidationResult,
+} from './validate-design';

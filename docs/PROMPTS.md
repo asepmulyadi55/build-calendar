@@ -20,7 +20,7 @@ Every session written out. Copy the block, paste it into Claude Code from the re
 | 2 | 0 | `P1-US-002` | — no UI | **done** |
 | 3 | 1 | `P1-US-101`–`104` | `index`, `samples`, `pricing` | **done** · 3 items partial |
 | 4 | 2 | `P1-US-201`–`203` | `signin`, `signup` | **done** · 5 items partial |
-| 5 | 7 | `P1-US-702` | `admin` | |
+| 5 | 7 | `P1-US-702` | `admin` | **done** · 2 items partial |
 | 6 | 3 | `P1-US-301`, `302` | `app-new` | |
 | 7 | 3 | `P1-US-303`, `304`, `305` | `app-editor` | |
 | 8 | 6 | `P1-US-601` | — renderer, no UI | |
@@ -243,7 +243,13 @@ Do not begin the next epic.
 
 ---
 
-## Session 5 — Template management
+## Session 5 — Template management ✅ done
+
+**Status: done · 2 items partial**
+
+> **Ran 2026-08-17.** Template CRUD in the admin panel, file-based import with validation, a to-scale preview, and an activate step that only exists on the template page. 229 tests pass, 36 of them on the validator: schema conformance, sheet count against the preset, and slot-id uniqueness across the whole design. The three launch templates are real files in `packages/db/templates/`, and `pnpm db:seed` validates each against its preset — a broken launch template now fails the seed rather than the first customer. Format documented in `docs/template-format.md`.
+>
+> **Partial:** the full import round trip — upload, R2 write, row, activate — was exercised against MinIO and a throwaway Postgres, not through the browser as a signed-in admin, because that needs an admin account in the real Supabase project. And the preview is a schematic rather than a render; the real renderer is Session 8 (ADR-0011).
 
 Built before the editor on purpose: without templates in the database, the editor has nothing to open.
 

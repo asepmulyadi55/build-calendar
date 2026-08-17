@@ -238,6 +238,26 @@ Two things also remain outside the codebase and cannot be closed from here: cust
 
 ---
 
+## ADR-0011 — Template authoring is a file plus an importer
+
+**Date:** 2026-08 · **Status:** Accepted
+
+**Context.** Phase 3 gives templates a visual editor. Until then someone has to author them, and P1-US-702 asks for a file-based flow. Three decisions were open.
+
+**Decision.**
+
+1. **The validator lives in `calendar-core` and returns codes, not sentences.** It owns the Design JSON schema, and the renderer will need the same checks before it spends five minutes on a broken template. Returning `{ code, path, params }` keeps the package free of interface copy (master §10.7); `en.ts` turns each code into a sentence. Every problem is collected rather than throwing on the first, because fixing a twelve-sheet template one error per attempt is a bad afternoon.
+
+2. **The preview is a schematic, not a render.** Sheets are drawn to scale in millimetres with slots and grid outlined. Rendering properly would mean a second engine, and AR-01 allows only one. What an admin needs before activating is "is the layout coherent" — are the slots where the designer meant, is anything outside the safe area — and an outline answers that. The real render arrives with P1-US-601.
+
+3. **Files are written to R2 before the row is created, and the row lands inactive.** An orphan object costs a fraction of a cent; a row pointing at a missing object is a template that looks importable and breaks later. Inactive-by-default is what makes the preview step meaningful — the only way to activate is the template page, after looking at it.
+
+**Consequences.** `packages/db/templates/` holds the three launch designs as versioned files, regenerated with `pnpm --filter @buildcalendar/db templates`. `pnpm db:seed` validates each against its preset, so a broken launch template fails the seed rather than the first customer, and stores the derived `slot_schema` — which therefore cannot drift from the design.
+
+Two things follow that are worth stating. Seeded rows carry a `design_key` pointing at an object that does not exist until an admin imports the file through the panel; they stay inactive until then, so nothing broken can reach the gallery. And thumbnails are served through an admin route rather than a public URL, because the same bucket holds customer photos and R2 public access is per-bucket, not per-prefix (NFR-S04).
+
+The format is documented in `docs/template-format.md`.
+
 ## Template for new entries
 
 Copy the block below verbatim when adding a decision. It is shown as raw markdown on purpose — so the heading and bold syntax stay visible and copyable rather than rendering as formatting.

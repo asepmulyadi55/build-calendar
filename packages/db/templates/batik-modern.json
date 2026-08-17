@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "productPresetCode": "WALL-1",
+  "year": 2027,
+  "startMonth": 1,
+  "sheets": [
+    {
+      "id": "sheet-01",
+      "index": 0,
+      "widthMm": 420,
+      "heightMm": 594,
+      "bleedMm": 3,
+      "safeMarginMm": 12,
+      "objects": [
+        {
+          "type": "calendarGrid",
+          "id": "grid-1",
+          "month": 1,
+          "year": 2027,
+          "weekStart": "monday",
+          "locale": "id-ID",
+          "showHolidayNames": true,
+          "showWeekNumbers": false,
+          "holidayColor": "#D8232A",
+          "fontFamily": "DejaVu Sans",
+          "cellStyle": {
+            "textColor": "#16171B",
+            "mutedColor": "#B6B8BE",
+            "ruleColor": "#DCDBD4",
+            "dayFontSizeMm": 4.5,
+            "headerFontSizeMm": 2.6,
+            "holidayNameFontSizeMm": 1.6
+          },
+          "xMm": 15,
+          "yMm": 383,
+          "widthMm": 396,
+          "heightMm": 202
+        }
+      ],
+      "slots": [
+        {
+          "id": "photo-1",
+          "type": "image",
+          "required": true,
+          "label": "Photo for sheet 1",
+          "xMm": 0,
+          "yMm": 0,
+          "widthMm": 426,
+          "heightMm": 351
+        }
+      ]
+    }
+  ]
+}

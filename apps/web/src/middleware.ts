@@ -14,7 +14,7 @@ import { REMEMBER_ME_COOKIE, REMEMBER_ME_MAX_AGE_SECONDS } from '@/lib/auth/conf
  * `requireUser` / `requireVerifiedUser`, and anything that spends coins checks
  * again at the point the money moves.
  */
-const PROTECTED_PREFIXES = ['/account', '/projects', '/coins'];
+const PROTECTED_PREFIXES = ['/account', '/projects', '/coins', '/admin'];
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });

@@ -53,6 +53,7 @@ export default tseslint.config(
     files: [
       'scripts/**/*.mjs',
       'packages/db/src/seed.ts',
+      'packages/db/scripts/**/*.mjs',
       'apps/renderer/src/**/*.ts',
       // Route handlers are where structured server logs are written.
       'apps/web/src/app/api/**/*.ts',

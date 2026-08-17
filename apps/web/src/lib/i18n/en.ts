@@ -529,6 +529,133 @@ export const en = {
     },
   },
 
+  /**
+   * Admin panel (Epic 7). English like the rest of the interface.
+   *
+   * `templateValidation` maps the issue codes `calendar-core` returns onto
+   * sentences. The validator stays free of interface copy so it can be reused by
+   * the renderer, and every message a human reads still lives in this one file.
+   */
+  admin: {
+    badge: 'ADMIN',
+    userView: 'User view',
+    nav: {
+      payments: 'Payments',
+      templates: 'Templates',
+      holidays: 'Holidays',
+      users: 'Users',
+      settings: 'Settings',
+    },
+
+    templates: {
+      eyebrow: 'Template library',
+      title: 'Templates',
+      lede: 'Templates are authored as files and imported here. A template stays inactive until you have previewed it.',
+      importCta: 'Import a template',
+      empty: 'No templates yet. Import one to get started.',
+      docsLink: 'Read the file format',
+
+      table: {
+        name: 'Name',
+        preset: 'Format',
+        category: 'Category',
+        slots: 'Slots',
+        status: 'Status',
+        order: 'Order',
+        actions: 'Actions',
+      },
+
+      status: { active: 'Active', inactive: 'Inactive' },
+      view: 'Open',
+
+      importTitle: 'Import a template',
+      importLede:
+        'Paste the Design JSON or upload the file. It is checked against the product preset before anything is stored.',
+      fieldName: 'Name',
+      fieldSlug: 'Slug',
+      fieldSlugHint:
+        'Used in the storage path and the public URL. Lowercase letters, numbers and hyphens.',
+      fieldCategory: 'Category',
+      fieldPreset: 'Product preset',
+      fieldSortOrder: 'Sort order',
+      fieldPremium: 'Premium template',
+      fieldThumbnail: 'Thumbnail',
+      fieldThumbnailHint: 'JPEG, PNG or WebP, up to 2 MB. Shown in the gallery.',
+      fieldDesignFile: 'Design JSON file',
+      fieldDesignPaste: 'or paste the Design JSON',
+      submitImport: 'Validate and import',
+      submitting: 'Importing…',
+
+      detailEyebrow: 'Template',
+      slotSchemaHeading: 'Slot schema',
+      slotSchemaLede: 'Derived from the design. This is what the editor asks the user to fill.',
+      previewHeading: 'Preview',
+      previewLede:
+        'Sheet outlines with every slot placed to scale, in millimetres. Check this before activating.',
+      previewSheet: 'Sheet {index}',
+      previewNoThumbnail: 'No thumbnail uploaded.',
+
+      activate: 'Activate',
+      deactivate: 'Deactivate',
+      activateHint:
+        'An active template appears in the gallery and can be used to start a calendar.',
+      delete: 'Delete template',
+      deleteConfirmLabel: 'Type the slug to confirm',
+      deleteConfirmMismatch: "That does not match this template's slug.",
+      deleteHint:
+        'Removes the row and its files. A calendar already built from it is unaffected — the design was copied at the time.',
+
+      saveChanges: 'Save changes',
+      saved: 'Saved.',
+      imported: 'Template imported. Preview it, then activate.',
+      activated: 'Template activated. It now appears in the gallery.',
+      deactivated: 'Template deactivated.',
+      deleted: 'Template deleted.',
+
+      errors: {
+        nameRequired: 'Give the template a name.',
+        slugInvalid: 'Use lowercase letters, numbers and hyphens only.',
+        slugTaken: 'A template with that slug already exists.',
+        presetRequired: 'Choose a product preset.',
+        categoryRequired: 'Give the template a category.',
+        designRequired: 'Upload or paste the Design JSON.',
+        designNotJson:
+          'That file is not valid JSON. Check for a trailing comma or a missing brace.',
+        thumbnailTooLarge: 'That image is larger than 2 MB.',
+        thumbnailWrongType: 'Thumbnails must be JPEG, PNG or WebP.',
+        storageNotConfigured:
+          'Object storage is not configured. Set the R2 variables before importing a template.',
+        notFound: 'That template no longer exists.',
+        validationFailed: 'The design was rejected. Nothing was stored.',
+      },
+    },
+
+    /** One sentence per issue code returned by `validateCalendarDesign`. */
+    templateValidation: {
+      heading: 'This design cannot be imported',
+      lede: 'Every problem found is listed. Nothing was stored.',
+      atPath: 'at {path}',
+      notAnObject: 'The file is not a Design JSON object.',
+      unsupportedSchemaVersion:
+        'Unsupported schemaVersion {version}. This build understands version {supported}.',
+      missingField: 'A required field is missing.',
+      invalidField: 'This field has the wrong type or an impossible value.',
+      presetCodeMismatch:
+        'The design says it is for {actual}, but it is being imported as {expected}.',
+      sheetCountMismatch: 'This preset needs {expected} sheets, and the design has {actual}.',
+      sheetSizeMismatch:
+        'Sheet trim size is {actualWidthMm} × {actualHeightMm} mm, but the preset is {expectedWidthMm} × {expectedHeightMm} mm.',
+      duplicateSlotId:
+        'Slot id "{slotId}" is used more than once. Ids address a user photo, so duplicates overwrite each other.',
+      emptySlotId: 'A slot has no id.',
+      noSlots: 'The design has no slots, so there is nothing for a user to fill.',
+      unknownFont:
+        '"{fontFamily}" is not in the renderer image. It would silently fall back and the PDF would not match the preview.',
+      invalidMonth: 'A calendar grid has month {month}, which is not between 1 and 12.',
+      invalidLocale: 'A calendar grid must render {expected}. The printed sheet is Indonesian.',
+    },
+  },
+
   health: {
     ok: 'ok',
     degraded: 'degraded',

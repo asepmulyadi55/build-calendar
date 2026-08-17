@@ -22,6 +22,9 @@ export const routes = {
   verifyEmail: '/verify-email',
   account: '/account',
 
+  adminTemplates: '/admin/templates',
+  adminTemplateNew: '/admin/templates/new',
+
   /** Built in later epics; linked from the marketing pages already. */
   newProject: '/projects/new',
   coins: '/coins',

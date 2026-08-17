@@ -1,0 +1,606 @@
+{
+  "schemaVersion": 1,
+  "productPresetCode": "DESK-A5L",
+  "year": 2027,
+  "startMonth": 1,
+  "sheets": [
+    {
+      "id": "sheet-01",
+      "index": 0,
+      "widthMm": 210,
+      "heightMm": 148,
+      "bleedMm": 3,
+      "safeMarginMm": 7,
+      "objects": [
+        {
+          "type": "calendarGrid",
+          "id": "grid-1",
+          "month": 1,
+          "year": 2027,
+          "weekStart": "monday",
+          "locale": "id-ID",
+          "showHolidayNames": true,
+          "showWeekNumbers": false,
+          "holidayColor": "#D8232A",
+          "fontFamily": "DejaVu Sans",
+          "cellStyle": {
+            "textColor": "#16171B",
+            "mutedColor": "#B6B8BE",
+            "ruleColor": "#DCDBD4",
+            "dayFontSizeMm": 4.5,
+            "headerFontSizeMm": 2.6,
+            "holidayNameFontSizeMm": 1.6
+          },
+          "xMm": 10,
+          "yMm": 122.1,
+          "widthMm": 196,
+          "heightMm": 21.900000000000006
+        }
+      ],
+      "slots": [
+        {
+          "id": "photo-cover",
+          "type": "image",
+          "required": true,
+          "label": "Photo for sheet 1",
+          "xMm": 0,
+          "yMm": 0,
+          "widthMm": 216,
+          "heightMm": 90.1
+        }
+      ]
+    },
+    {
+      "id": "sheet-02",
+      "index": 1,
+      "widthMm": 210,
+      "heightMm": 148,
+      "bleedMm": 3,
+      "safeMarginMm": 7,
+      "objects": [
+        {
+          "type": "calendarGrid",
+          "id": "grid-2",
+          "month": 1,
+          "year": 2027,
+          "weekStart": "monday",
+          "locale": "id-ID",
+          "showHolidayNames": true,
+          "showWeekNumbers": false,
+          "holidayColor": "#D8232A",
+          "fontFamily": "DejaVu Sans",
+          "cellStyle": {
+            "textColor": "#16171B",
+            "mutedColor": "#B6B8BE",
+            "ruleColor": "#DCDBD4",
+            "dayFontSizeMm": 4.5,
+            "headerFontSizeMm": 2.6,
+            "holidayNameFontSizeMm": 1.6
+          },
+          "xMm": 10,
+          "yMm": 122.1,
+          "widthMm": 196,
+          "heightMm": 21.900000000000006
+        }
+      ],
+      "slots": [
+        {
+          "id": "photo-1",
+          "type": "image",
+          "required": true,
+          "label": "Photo for sheet 2",
+          "xMm": 0,
+          "yMm": 0,
+          "widthMm": 216,
+          "heightMm": 90.1
+        }
+      ]
+    },
+    {
+      "id": "sheet-03",
+      "index": 2,
+      "widthMm": 210,
+      "heightMm": 148,
+      "bleedMm": 3,
+      "safeMarginMm": 7,
+      "objects": [
+        {
+          "type": "calendarGrid",
+          "id": "grid-3",
+          "month": 2,
+          "year": 2027,
+          "weekStart": "monday",
+          "locale": "id-ID",
+          "showHolidayNames": true,
+          "showWeekNumbers": false,
+          "holidayColor": "#D8232A",
+          "fontFamily": "DejaVu Sans",
+          "cellStyle": {
+            "textColor": "#16171B",
+            "mutedColor": "#B6B8BE",
+            "ruleColor": "#DCDBD4",
+            "dayFontSizeMm": 4.5,
+            "headerFontSizeMm": 2.6,
+            "holidayNameFontSizeMm": 1.6
+          },
+          "xMm": 10,
+          "yMm": 122.1,
+          "widthMm": 196,
+          "heightMm": 21.900000000000006
+        }
+      ],
+      "slots": [
+        {
+          "id": "photo-2",
+          "type": "image",
+          "required": true,
+          "label": "Photo for sheet 3",
+          "xMm": 0,
+          "yMm": 0,
+          "widthMm": 216,
+          "heightMm": 90.1
+        }
+      ]
+    },
+    {
+      "id": "sheet-04",
+      "index": 3,
+      "widthMm": 210,
+      "heightMm": 148,
+      "bleedMm": 3,
+      "safeMarginMm": 7,
+      "objects": [
+        {
+          "type": "calendarGrid",
+          "id": "grid-4",
+          "month": 3,
+          "year": 2027,
+          "weekStart": "monday",
+          "locale": "id-ID",
+          "showHolidayNames": true,
+          "showWeekNumbers": false,
+          "holidayColor": "#D8232A",
+          "fontFamily": "DejaVu Sans",
+          "cellStyle": {
+            "textColor": "#16171B",
+            "mutedColor": "#B6B8BE",
+            "ruleColor": "#DCDBD4",
+            "dayFontSizeMm": 4.5,
+            "headerFontSizeMm": 2.6,
+            "holidayNameFontSizeMm": 1.6
+          },
+          "xMm": 10,
+          "yMm": 122.1,
+          "widthMm": 196,
+          "heightMm": 21.900000000000006
+        }
+      ],
+      "slots": [
+        {
+          "id": "photo-3",
+          "type": "image",
+          "required": true,
+          "label": "Photo for sheet 4",
+          "xMm": 0,
+          "yMm": 0,
+          "widthMm": 216,
+          "heightMm": 90.1
+        }
+      ]
+    },
+    {
+      "id": "sheet-05",
+      "index": 4,
+      "widthMm": 210,
+      "heightMm": 148,
+      "bleedMm": 3,
+      "safeMarginMm": 7,
+      "objects": [
+        {
+          "type": "calendarGrid",
+          "id": "grid-5",
+          "month": 4,
+          "year": 2027,
+          "weekStart": "monday",
+          "locale": "id-ID",
+          "showHolidayNames": true,
+          "showWeekNumbers": false,
+          "holidayColor": "#D8232A",
+          "fontFamily": "DejaVu Sans",
+          "cellStyle": {
+            "textColor": "#16171B",
+            "mutedColor": "#B6B8BE",
+            "ruleColor": "#DCDBD4",
+            "dayFontSizeMm": 4.5,
+            "headerFontSizeMm": 2.6,
+            "holidayNameFontSizeMm": 1.6
+          },
+          "xMm": 10,
+          "yMm": 122.1,
+          "widthMm": 196,
+          "heightMm": 21.900000000000006
+        }
+      ],
+      "slots": [
+        {
+          "id": "photo-4",
+          "type": "image",
+          "required": true,
+          "label": "Photo for sheet 5",
+          "xMm": 0,
+          "yMm": 0,
+          "widthMm": 216,
+          "heightMm": 90.1
+        }
+      ]
+    },
+    {
+      "id": "sheet-06",
+      "index": 5,
+      "widthMm": 210,
+      "heightMm": 148,
+      "bleedMm": 3,
+      "safeMarginMm": 7,
+      "objects": [
+        {
+          "type": "calendarGrid",
+          "id": "grid-6",
+          "month": 5,
+          "year": 2027,
+          "weekStart": "monday",
+          "locale": "id-ID",
+          "showHolidayNames": true,
+          "showWeekNumbers": false,
+          "holidayColor": "#D8232A",
+          "fontFamily": "DejaVu Sans",
+          "cellStyle": {
+            "textColor": "#16171B",
+            "mutedColor": "#B6B8BE",
+            "ruleColor": "#DCDBD4",
+            "dayFontSizeMm": 4.5,
+            "headerFontSizeMm": 2.6,
+            "holidayNameFontSizeMm": 1.6
+          },
+          "xMm": 10,
+          "yMm": 122.1,
+          "widthMm": 196,
+          "heightMm": 21.900000000000006
+        }
+      ],
+      "slots": [
+        {
+          "id": "photo-5",
+          "type": "image",
+          "required": true,
+          "label": "Photo for sheet 6",
+          "xMm": 0,
+          "yMm": 0,
+          "widthMm": 216,
+          "heightMm": 90.1
+        }
+      ]
+    },
+    {
+      "id": "sheet-07",
+      "index": 6,
+      "widthMm": 210,
+      "heightMm": 148,
+      "bleedMm": 3,
+      "safeMarginMm": 7,
+      "objects": [
+        {
+          "type": "calendarGrid",
+          "id": "grid-7",
+          "month": 6,
+          "year": 2027,
+          "weekStart": "monday",
+          "locale": "id-ID",
+          "showHolidayNames": true,
+          "showWeekNumbers": false,
+          "holidayColor": "#D8232A",
+          "fontFamily": "DejaVu Sans",
+          "cellStyle": {
+            "textColor": "#16171B",
+            "mutedColor": "#B6B8BE",
+            "ruleColor": "#DCDBD4",
+            "dayFontSizeMm": 4.5,
+            "headerFontSizeMm": 2.6,
+            "holidayNameFontSizeMm": 1.6
+          },
+          "xMm": 10,
+          "yMm": 122.1,
+          "widthMm": 196,
+          "heightMm": 21.900000000000006
+        }
+      ],
+      "slots": [
+        {
+          "id": "photo-6",
+          "type": "image",
+          "required": true,
+          "label": "Photo for sheet 7",
+          "xMm": 0,
+          "yMm": 0,
+          "widthMm": 216,
+          "heightMm": 90.1
+        }
+      ]
+    },
+    {
+      "id": "sheet-08",
+      "index": 7,
+      "widthMm": 210,
+      "heightMm": 148,
+      "bleedMm": 3,
+      "safeMarginMm": 7,
+      "objects": [
+        {
+          "type": "calendarGrid",
+          "id": "grid-8",
+          "month": 7,
+          "year": 2027,
+          "weekStart": "monday",
+          "locale": "id-ID",
+          "showHolidayNames": true,
+          "showWeekNumbers": false,
+          "holidayColor": "#D8232A",
+          "fontFamily": "DejaVu Sans",
+          "cellStyle": {
+            "textColor": "#16171B",
+            "mutedColor": "#B6B8BE",
+            "ruleColor": "#DCDBD4",
+            "dayFontSizeMm": 4.5,
+            "headerFontSizeMm": 2.6,
+            "holidayNameFontSizeMm": 1.6
+          },
+          "xMm": 10,
+          "yMm": 122.1,
+          "widthMm": 196,
+          "heightMm": 21.900000000000006
+        }
+      ],
+      "slots": [
+        {
+          "id": "photo-7",
+          "type": "image",
+          "required": true,
+          "label": "Photo for sheet 8",
+          "xMm": 0,
+          "yMm": 0,
+          "widthMm": 216,
+          "heightMm": 90.1
+        }
+      ]
+    },
+    {
+      "id": "sheet-09",
+      "index": 8,
+      "widthMm": 210,
+      "heightMm": 148,
+      "bleedMm": 3,
+      "safeMarginMm": 7,
+      "objects": [
+        {
+          "type": "calendarGrid",
+          "id": "grid-9",
+          "month": 8,
+          "year": 2027,
+          "weekStart": "monday",
+          "locale": "id-ID",
+          "showHolidayNames": true,
+          "showWeekNumbers": false,
+          "holidayColor": "#D8232A",
+          "fontFamily": "DejaVu Sans",
+          "cellStyle": {
+            "textColor": "#16171B",
+            "mutedColor": "#B6B8BE",
+            "ruleColor": "#DCDBD4",
+            "dayFontSizeMm": 4.5,
+            "headerFontSizeMm": 2.6,
+            "holidayNameFontSizeMm": 1.6
+          },
+          "xMm": 10,
+          "yMm": 122.1,
+          "widthMm": 196,
+          "heightMm": 21.900000000000006
+        }
+      ],
+      "slots": [
+        {
+          "id": "photo-8",
+          "type": "image",
+          "required": true,
+          "label": "Photo for sheet 9",
+          "xMm": 0,
+          "yMm": 0,
+          "widthMm": 216,
+          "heightMm": 90.1
+        }
+      ]
+    },
+    {
+      "id": "sheet-10",
+      "index": 9,
+      "widthMm": 210,
+      "heightMm": 148,
+      "bleedMm": 3,
+      "safeMarginMm": 7,
+      "objects": [
+        {
+          "type": "calendarGrid",
+          "id": "grid-10",
+          "month": 9,
+          "year": 2027,
+          "weekStart": "monday",
+          "locale": "id-ID",
+          "showHolidayNames": true,
+          "showWeekNumbers": false,
+          "holidayColor": "#D8232A",
+          "fontFamily": "DejaVu Sans",
+          "cellStyle": {
+            "textColor": "#16171B",
+            "mutedColor": "#B6B8BE",
+            "ruleColor": "#DCDBD4",
+            "dayFontSizeMm": 4.5,
+            "headerFontSizeMm": 2.6,
+            "holidayNameFontSizeMm": 1.6
+          },
+          "xMm": 10,
+          "yMm": 122.1,
+          "widthMm": 196,
+          "heightMm": 21.900000000000006
+        }
+      ],
+      "slots": [
+        {
+          "id": "photo-9",
+          "type": "image",
+          "required": true,
+          "label": "Photo for sheet 10",
+          "xMm": 0,
+          "yMm": 0,
+          "widthMm": 216,
+          "heightMm": 90.1
+        }
+      ]
+    },
+    {
+      "id": "sheet-11",
+      "index": 10,
+      "widthMm": 210,
+      "heightMm": 148,
+      "bleedMm": 3,
+      "safeMarginMm": 7,
+      "objects": [
+        {
+          "type": "calendarGrid",
+          "id": "grid-11",
+          "month": 10,
+          "year": 2027,
+          "weekStart": "monday",
+          "locale": "id-ID",
+          "showHolidayNames": true,
+          "showWeekNumbers": false,
+          "holidayColor": "#D8232A",
+          "fontFamily": "DejaVu Sans",
+          "cellStyle": {
+            "textColor": "#16171B",
+            "mutedColor": "#B6B8BE",
+            "ruleColor": "#DCDBD4",
+            "dayFontSizeMm": 4.5,
+            "headerFontSizeMm": 2.6,
+            "holidayNameFontSizeMm": 1.6
+          },
+          "xMm": 10,
+          "yMm": 122.1,
+          "widthMm": 196,
+          "heightMm": 21.900000000000006
+        }
+      ],
+      "slots": [
+        {
+          "id": "photo-10",
+          "type": "image",
+          "required": true,
+          "label": "Photo for sheet 11",
+          "xMm": 0,
+          "yMm": 0,
+          "widthMm": 216,
+          "heightMm": 90.1
+        }
+      ]
+    },
+    {
+      "id": "sheet-12",
+      "index": 11,
+      "widthMm": 210,
+      "heightMm": 148,
+      "bleedMm": 3,
+      "safeMarginMm": 7,
+      "objects": [
+        {
+          "type": "calendarGrid",
+          "id": "grid-12",
+          "month": 11,
+          "year": 2027,
+          "weekStart": "monday",
+          "locale": "id-ID",
+          "showHolidayNames": true,
+          "showWeekNumbers": false,
+          "holidayColor": "#D8232A",
+          "fontFamily": "DejaVu Sans",
+          "cellStyle": {
+            "textColor": "#16171B",
+            "mutedColor": "#B6B8BE",
+            "ruleColor": "#DCDBD4",
+            "dayFontSizeMm": 4.5,
+            "headerFontSizeMm": 2.6,
+            "holidayNameFontSizeMm": 1.6
+          },
+          "xMm": 10,
+          "yMm": 122.1,
+          "widthMm": 196,
+          "heightMm": 21.900000000000006
+        }
+      ],
+      "slots": [
+        {
+          "id": "photo-11",
+          "type": "image",
+          "required": true,
+          "label": "Photo for sheet 12",
+          "xMm": 0,
+          "yMm": 0,
+          "widthMm": 216,
+          "heightMm": 90.1
+        }
+      ]
+    },
+    {
+      "id": "sheet-13",
+      "index": 12,
+      "widthMm": 210,
+      "heightMm": 148,
+      "bleedMm": 3,
+      "safeMarginMm": 7,
+      "objects": [
+        {
+          "type": "calendarGrid",
+          "id": "grid-13",
+          "month": 12,
+          "year": 2027,
+          "weekStart": "monday",
+          "locale": "id-ID",
+          "showHolidayNames": true,
+          "showWeekNumbers": false,
+          "holidayColor": "#D8232A",
+          "fontFamily": "DejaVu Sans",
+          "cellStyle": {
+            "textColor": "#16171B",
+            "mutedColor": "#B6B8BE",
+            "ruleColor": "#DCDBD4",
+            "dayFontSizeMm": 4.5,
+            "headerFontSizeMm": 2.6,
+            "holidayNameFontSizeMm": 1.6
+          },
+          "xMm": 10,
+          "yMm": 122.1,
+          "widthMm": 196,
+          "heightMm": 21.900000000000006
+        }
+      ],
+      "slots": [
+        {
+          "id": "photo-12",
+          "type": "image",
+          "required": true,
+          "label": "Photo for sheet 13",
+          "xMm": 0,
+          "yMm": 0,
+          "widthMm": 216,
+          "heightMm": 90.1
+        }
+      ]
+    }
+  ]
+}
