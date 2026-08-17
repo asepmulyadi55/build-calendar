@@ -754,3 +754,22 @@ body{overflow-x:hidden}
 .admin-lede{margin-top:6px;margin-bottom:18px}
 .admin-slot-schema{margin-top:28px}
 .admin-aside-form{margin-top:20px;padding-top:20px;border-top:1px solid var(--rule);max-width:none}
+
+/* ---------- new project ---------- */
+.new-types{margin-bottom:44px}
+.type-selected{background:#fff;box-shadow:inset 0 0 0 2px var(--ink)}
+.new-designs-head{margin-bottom:20px;flex-wrap:wrap;gap:16px}
+.new-designs-title{font-size:26px;margin-top:6px}
+.new-year{width:auto;padding:9px 12px}
+.new-chips{margin-bottom:22px}
+.new-modal-lede{margin:6px 0 16px}
+.new-modal-sheets{max-height:320px;overflow-y:auto}
+.new-modal-form{margin-top:18px}
+.coinbox-label{color:var(--ink-45)}
+.coinbox-unit{font-size:15px;font-family:var(--f-body);font-weight:400;color:var(--ink-45)}
+.side-admin{padding-left:12px}
+.side-nav span.is-disabled{display:flex;align-items:center;gap:10px;padding:10px 12px;font-size:15px;color:var(--ink-70);border-radius:2px;opacity:.45}
+.editor-placeholder{max-width:var(--measure)}
+.editor-facts{margin:16px 0 0 18px;display:grid;gap:7px;font-size:15px;color:var(--ink-70)}
+.editor-back{margin-top:20px}
+.project-title{font-size:clamp(26px,3vw,36px);margin-top:8px}

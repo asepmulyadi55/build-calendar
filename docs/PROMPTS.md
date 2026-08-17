@@ -21,7 +21,7 @@ Every session written out. Copy the block, paste it into Claude Code from the re
 | 3 | 1 | `P1-US-101`–`104` | `index`, `samples`, `pricing` | **done** · 3 items partial |
 | 4 | 2 | `P1-US-201`–`203` | `signin`, `signup` | **done** · 5 items partial |
 | 5 | 7 | `P1-US-702` | `admin` | **done** · 2 items partial |
-| 6 | 3 | `P1-US-301`, `302` | `app-new` | |
+| 6 | 3 | `P1-US-301`, `302` | `app-new` | **done** |
 | 7 | 3 | `P1-US-303`, `304`, `305` | `app-editor` | |
 | 8 | 6 | `P1-US-601` | — renderer, no UI | |
 | 9 | 4 | `P1-US-401`, `402` | `app-preview` | |
@@ -280,7 +280,13 @@ Do not begin the next epic.
 
 ---
 
-## Session 6 — Choosing a format and a design
+## Session 6 — Choosing a format and a design ✅ done
+
+**Status: done**
+
+> **Ran 2026-08-17.** `/app/new` lists active presets as cards, picking one filters the gallery, and a quick look shows every sheet before you commit. Selecting a design copies the template's Design JSON into a new `projects` row and lands on the project. 243 tests pass, including an integration test that rewrites the template afterwards and proves the project does not move. Verified in a browser: 5 format cards, scratch button disabled and labelled, 12 sheets in the quick look, guest redirected to `/signin?callbackUrl=%2Fapp%2Fnew%3Ftemplate%3Dkayu`, 0px overflow at 380px.
+>
+> `/projects/[id]/edit` is a placeholder so the flow does not dead-end; the editor is Session 7 (ADR-0012).
 
 ```
 Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 3, stories

@@ -28,6 +28,14 @@ enum UserRole {
   @@map("user_role")
 }
 
+enum ProjectStatus {
+  draft
+  unlocking
+  unlocked
+
+  @@map("project_status")
+}
+
 enum HolidayType {
   national
   joint_leave
@@ -53,6 +61,8 @@ model Profile {
   deletedAt        DateTime? @map("deleted_at") @db.Timestamptz(6)
 
   @@index([deletedAt])
+  projects Project[]
+
   @@map("profiles")
 }
 
@@ -89,6 +99,7 @@ model ProductPreset {
   isActive           Boolean @default(true) @map("is_active")
 
   templates Template[]
+  projects  Project[]
 
   @@map("product_presets")
 }
@@ -108,9 +119,47 @@ model Template {
   sortOrder       Int     @default(0) @map("sort_order")
 
   productPreset ProductPreset @relation(fields: [productPresetId], references: [id])
+  projects      Project[]
 
   @@index([productPresetId])
   @@map("templates")
+}
+
+/// A user's calendar.
+///
+/// `designJson` is a **copy** of the template's design taken at selection time, never
+/// a reference (P1-US-302). A later edit to the template must not alter a calendar
+/// somebody already built — and once unlocked, that calendar is something they paid
+/// for.
+model Project {
+  id              String        @id @default(uuid()) @db.Uuid
+  userId          String        @map("user_id") @db.Uuid
+  title           String
+  productPresetId String        @map("product_preset_id") @db.Uuid
+  /// Which template it started from, for reporting only. The design is already copied.
+  templateId      String?       @map("template_id") @db.Uuid
+  year            Int
+  /// 1-12. Calendars may start at a month other than January.
+  startMonth      Int           @default(1) @map("start_month")
+  designJson      Json          @map("design_json")
+  schemaVersion   Int           @map("schema_version")
+  /// Tracked so design growth can be measured against the 500 MB quota (§3.2).
+  designBytes     Int           @default(0) @map("design_bytes")
+  status          ProjectStatus @default(draft)
+  thumbnailKey    String?       @map("thumbnail_key")
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  /// Soft delete; hard delete only on a data-deletion request.
+  deletedAt       DateTime?     @map("deleted_at") @db.Timestamptz(6)
+
+  profile       Profile       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productPreset ProductPreset @relation(fields: [productPresetId], references: [id])
+  template      Template?     @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  @@index([userId, deletedAt])
+  @@index([productPresetId])
+  @@index([templateId])
+  @@map("projects")
 }
 
 model Holiday {

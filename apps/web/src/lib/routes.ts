@@ -25,8 +25,10 @@ export const routes = {
   adminTemplates: '/admin/templates',
   adminTemplateNew: '/admin/templates/new',
 
-  /** Built in later epics; linked from the marketing pages already. */
-  newProject: '/projects/new',
+  /** P1-US-301 calls this `/app/new`. */
+  newProject: '/app/new',
+  projects: '/app/projects',
+  projectEditor: (id: string) => `/projects/${id}/edit`,
   coins: '/coins',
 } as const;
 

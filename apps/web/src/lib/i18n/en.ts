@@ -656,6 +656,84 @@ export const en = {
     },
   },
 
+  /** Building a calendar (Epic 3). */
+  newProject: {
+    crumbStep1: 'New calendar · Step 1 of 2',
+    crumbStep2: 'Step 2 of 2',
+    titleFormat: 'Choose a format',
+    titleDesign: 'Pick a design',
+    cancel: 'Cancel',
+    year: 'Year',
+    selected: 'selected',
+    sheetsSuffix: 'sheets',
+    sheetSuffixSingular: 'sheet',
+
+    fromScratch: 'Start from scratch',
+    fromScratchBadge: 'Coming soon',
+    fromScratchHint: 'Designing a calendar from a blank sheet arrives in a later release.',
+
+    filterAll: 'All',
+    filterLabel: 'Filter designs by category',
+    use: 'USE →',
+    quickLook: 'Quick look',
+    premium: 'Premium',
+
+    noPresets: 'No calendar formats are available right now. Please try again shortly.',
+    noTemplates:
+      'No designs are ready for this format yet. Try another format, or ask us on WhatsApp.',
+    chooseFormatFirst: 'Choose a format above to see the designs that fit it.',
+
+    modal: {
+      close: 'Close',
+      sheets: 'Every sheet in this design',
+      sheetLabel: 'Sheet {index}',
+      useThis: 'Use this design',
+      slots: '{count} photos to fill',
+      slot: '1 photo to fill',
+    },
+
+    creating: 'Creating your calendar…',
+    createCta: 'Use this design',
+
+    errors: {
+      signInRequired: 'Please sign in to start a calendar.',
+      templateNotFound: 'That design is no longer available.',
+      templateInactive: 'That design is not available yet.',
+      designUnavailable:
+        'That design could not be loaded. Please try another one, or tell us on WhatsApp.',
+      yearInvalid: 'Choose a year between {min} and {max}.',
+      createFailed: 'Your calendar could not be created. Please try again.',
+    },
+  },
+
+  /**
+   * The landing page after a project is created. The editor itself is a later
+   * story; this page exists so the flow does not dead-end.
+   */
+  projectEditor: {
+    heading: 'Your calendar is ready to edit',
+    body: 'The design has been copied into your calendar, so later changes to the template will not affect it. The editor arrives in the next release.',
+    sheets: 'Sheets',
+    year: 'Year',
+    copiedFrom: 'Copied from',
+    templateRemoved: 'a template that has since been removed',
+    designBytes: 'Design size (bytes)',
+    back: 'Start another calendar',
+  },
+
+  appShell: {
+    projects: 'Projects',
+    newCalendar: 'New calendar',
+    coins: 'Coins & billing',
+    orders: 'Orders',
+    settings: 'Settings',
+    comingSoon: 'Coming soon',
+    balance: 'BALANCE',
+    coinsUnit: 'coins',
+    topUp: 'Top up',
+    adminView: 'Admin view →',
+  },
+
   health: {
     ok: 'ok',
     degraded: 'degraded',

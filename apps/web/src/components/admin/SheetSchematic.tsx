@@ -77,7 +77,9 @@ export function SheetSchematic({ sheet }: { sheet: Sheet }) {
             width={grid.widthMm}
             height={grid.heightMm}
             fill="none"
-            stroke="var(--merah)"
+            // Not red: in this design system red marks holidays and the single
+            // primary action, never a decorative outline.
+            stroke="var(--ink-45)"
             strokeWidth={0.5}
           />
         ))}
