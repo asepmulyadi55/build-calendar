@@ -13,28 +13,41 @@ Every session written out. Copy the block, paste it into Claude Code from the re
 
 ## Session map
 
-| Session | Epic | Stories | Design pages |
-|---|---|---|---|
-| 0 | — | `P1-US-000` | — throwaway spike |
-| 1 | 0 | `P1-US-001`, `003` | `assets/ds.css` |
-| 2 | 0 | `P1-US-002` | — no UI |
-| 3 | 1 | `P1-US-101`–`104` | `index`, `samples`, `pricing` |
-| 4 | 2 | `P1-US-201`–`203` | `signin`, `signup` |
-| 5 | 7 | `P1-US-702` | `admin` |
-| 6 | 3 | `P1-US-301`, `302` | `app-new` |
-| 7 | 3 | `P1-US-303`, `304`, `305` | `app-editor` |
-| 8 | 6 | `P1-US-601` | — renderer, no UI |
-| 9 | 4 | `P1-US-401`, `402` | `app-preview` |
-| 10 | 5 | `P1-US-501`, `502`, `503` | `app-coins`, `admin` |
-| 11 | 6 | `P1-US-602`, `603` | `app-export` |
-| 12 | 7 | `P1-US-701`, `703` | `admin` |
-| 13 | 1 | `P1-US-105` + real sample images | `index`, `app-preview` |
+| Session | Epic | Stories | Design pages | Status |
+|---|---|---|---|---|
+| 0 | — | `P1-US-000` | — throwaway spike | **code done** · print-shop check outstanding |
+| 1 | 0 | `P1-US-001`, `003` | `assets/ds.css` | **done** · base components outstanding |
+| 2 | 0 | `P1-US-002` | — no UI | **done** |
+| 3 | 1 | `P1-US-101`–`104` | `index`, `samples`, `pricing` | next |
+| 4 | 2 | `P1-US-201`–`203` | `signin`, `signup` | |
+| 5 | 7 | `P1-US-702` | `admin` | |
+| 6 | 3 | `P1-US-301`, `302` | `app-new` | |
+| 7 | 3 | `P1-US-303`, `304`, `305` | `app-editor` | |
+| 8 | 6 | `P1-US-601` | — renderer, no UI | |
+| 9 | 4 | `P1-US-401`, `402` | `app-preview` | |
+| 10 | 5 | `P1-US-501`, `502`, `503` | `app-coins`, `admin` | |
+| 11 | 6 | `P1-US-602`, `603` | `app-export` | |
+| 12 | 7 | `P1-US-701`, `703` | `admin` | |
+| 13 | 1 | `P1-US-105` + real sample images | `index`, `app-preview` | |
+
+Two things are carried forward rather than blocking. Neither is code:
+
+- **The spike gate is not closed.** Session 0's exit criteria are a peak-RSS measurement *and* a printed sheet you would sell. The measurement passed; the sheet has not been printed. Sessions 1 and 2 built no renderer architecture, so the cost of running ahead is still near zero — it stops being near zero at Session 8.
+- **Four of nine base components have no design.** Button, Input, Card, Modal and Badge exist in `assets/ds.css`. Toast, Tabs, EmptyState and Skeleton appear nowhere in `design/`, so building them means inventing a design rather than translating one.
 
 Two orderings are deliberate. **Session 5 builds template management before the editor**, because without templates in the database the editor has nothing to open and cannot be tested. **Session 13 comes last** because it needs project codes and real print screenshots, neither of which exists earlier.
 
 ---
 
 ## Session 0 — The spike
+
+**Status: code done · print-shop check outstanding**
+
+> **Ran 2026-08-16.** A3 measured 303.02 × 426.13 mm and A2 426.13 × 600.03 mm, both inside the ±0.5 mm tolerance. Text is vector: 52 extractable objects and 3 embedded font subsets per sheet. Under `docker run -m 1g`: cold job 219 MB (A3) and 229 MB (A2), warm worker 375 MB and 393 MB, no OOM. Inside the §4.2 budget, so no degradation step was applied. Report and PDFs are in `spike/`.
+>
+> **Outstanding:** the printed sheet. Take `spike/out/a3-303x426mm.pdf` to a print shop.
+>
+> Also open, from the report's §3: whether to raise the 4000 px print-derivative cap (A2 needs 5031 px at 300 DPI) and whether the renderer's `mem_limit` stays at 500 MB when warm A2 peaks at 393–430 MB.
 
 Throwaway code whose only job is to turn the project's two riskiest assumptions into measurements. Do not let it become the real renderer.
 
@@ -77,6 +90,14 @@ no Next.js, no queue. When the report is written, stop.
 
 ## Session 1 — Foundation
 
+**Status: done · base components outstanding**
+
+> **Ran 2026-08-16.** Monorepo, Docker Compose (web, renderer, redis, caddy — no Postgres), Prisma with both URLs, commented `.env.example`, ESLint + Prettier + TS strict, CI, and `pnpm check:rls`. Design tokens live in `packages/ui/src/theme.css`, copied value-for-value from `ds.css`. Verified from a clean checkout: install, migrate, seed, `pnpm dev`, and all gates.
+>
+> The RLS gate was tested against a throwaway Postgres and proven to fail both ways — a missing `ENABLE ROW LEVEL SECURITY` and a missing deny-all policy. `anon` and `authenticated` are denied on every table.
+>
+> **Outstanding:** the nine base components of `P1-US-003`. Five have a design and can be built with the first screen that uses them; four do not exist in `design/` at all and need designing first.
+
 ```
 Read CLAUDE.md and docs/02-phase-1-mvp.md stories P1-US-001 and
 P1-US-003.
@@ -104,6 +125,17 @@ from a clean clone.
 
 ## Session 2 — calendar-core
 
+**Status: done**
+
+> **Ran 2026-08-16.** All nine acceptance criteria met. 111 tests, written before the implementation, covering the four required cases plus UTC determinism, input validation, and the language split. Zero DOM dependencies enforced three ways: `tsconfig` omits the DOM lib, a test asserts the source touches no DOM global and imports nothing outside the package, and `package.json` declares no dependencies and no peer dependencies.
+>
+> Two judgement calls that a reviewer should know about, because neither is obvious from the code:
+>
+> - `renderCalendarGridToFabric` returns Fabric's **serialised** form, not a live `Group`. Importing Fabric would have broken the zero-DOM criterion — its default entry is the browser build and its `./node` entry pulls in `canvas` and `jsdom`. Consumers call `util.enlivenObjects([...])`. Type names were verified against fabric 6.7.1 source, not guessed.
+> - `fonts.ts` lists exactly what `infra/Dockerfile.renderer` installs today — the DejaVu and Liberation families. The interface faces from `ds.css` are deliberately absent because they are not in the image, and a font in the picker but not in the image substitutes silently.
+>
+> **Check by hand:** confirm a real `fabric.Group` built from this JSON positions its children as intended. Child coordinates are group-top-left relative with `originX`/`originY` of `left`/`top`. It is the one thing that could not be exercised without importing Fabric.
+
 ```
 Read CLAUDE.md and docs/02-phase-1-mvp.md story P1-US-002.
 
@@ -128,6 +160,8 @@ Nothing outside this package.
 ---
 
 ## Session 3 — Public pages
+
+**Status: next**
 
 ```
 Read CLAUDE.md. Then read docs/02-phase-1-mvp.md, epic 1, stories
