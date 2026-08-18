@@ -314,7 +314,13 @@ Do not begin the next epic.
 
 ---
 
-## Session 7 — The template editor
+## Session 7 — The template editor ✅ done
+
+**Status: done — not yet checked in a browser**
+
+> **Ran 2026-08-18.** The editor edits only what `slot_schema` opens up; everything else is locked and unselectable. Photos upload by drag-and-drop or picker, several at a time, validated by magic bytes and capped at 15 MB. EXIF is stripped including GPS — the test asserts the bytes contain neither `GPS` nor `iPhone` — after orientation is baked into the pixels, and three derivatives go to R2 under `users/{userId}/assets/{assetId}/{variant}.jpg` with the original discarded. A per-slot indicator reports DPI in plain language, and *cuti bersama* now prints a hollow marker against a national holiday's solid one, with its own legend entry. 304 tests pass; typecheck, lint, `check:rls` and `next build` are clean.
+>
+> Two things are honestly unfinished. **Nothing here has been opened in a browser** — a browser pass caught real bugs in Sessions 1 and 6, and this epic has more UI than either. And the crop values are stored and previewed with a CSS transform but the renderer does not consume them yet, so editor-to-export parity for cropping is unproven; AR-01 makes that a blocker as soon as Session 8 renders a slot (ADR-0012).
 
 The largest session in Phase 1. Splitting it across two sittings is sensible: `P1-US-303` first, then `304` and `305`.
 

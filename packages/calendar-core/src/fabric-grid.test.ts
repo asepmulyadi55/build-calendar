@@ -26,6 +26,76 @@ const grid = createCalendarGridObject({
 const texts = (objects: readonly FabricObject[]) =>
   objects.filter((o) => o.type === 'Text').map((o) => (o as { text: string }).text);
 
+/**
+ * P1-US-305: joint leave days (*cuti bersama*) must be styled distinctly from
+ * national holidays. They are non-working days, so they stay red — but a reader
+ * planning time off needs to tell the two apart at a glance, and on a monochrome
+ * print the colour is gone. The distinction is therefore the marker's shape:
+ * solid for a national holiday, hollow ring for joint leave alone.
+ */
+const jointLeaveHolidays: Holiday[] = [
+  ...holidays,
+  {
+    date: '2027-01-08',
+    name: 'Cuti Bersama Tahun Baru Imlek',
+    type: 'joint_leave',
+    year: 2027,
+    isRedDate: true,
+  },
+];
+
+const markerFor = (objects: readonly FabricObject[], date: string) =>
+  objects.find((o) => o.type === 'Rect' && o.id === `marker-${date}`) as
+    | { fill: string; stroke?: string; strokeWidth?: number }
+    | undefined;
+
+describe('joint leave days', () => {
+  it('renders a hollow marker, where a national holiday is solid', () => {
+    const group = renderCalendarGridToFabric({ ...grid, holidays: jointLeaveHolidays }, 1);
+
+    const national = markerFor(group.objects, '2027-01-01');
+    const jointLeave = markerFor(group.objects, '2027-01-08');
+
+    expect(national).toBeDefined();
+    expect(jointLeave).toBeDefined();
+
+    // Solid: filled with the holiday colour, no outline needed.
+    expect(national!.fill).toBe(grid.holidayColor);
+
+    // Hollow: no fill, outlined in the same colour.
+    expect(jointLeave!.fill).toBe('transparent');
+    expect(jointLeave!.stroke).toBe(grid.holidayColor);
+    expect(jointLeave!.strokeWidth).toBeGreaterThan(0);
+  });
+
+  it('keeps the solid marker when a national holiday shares the date', () => {
+    const sameDate: Holiday[] = [
+      ...holidays,
+      {
+        date: '2027-01-01',
+        name: 'Cuti Bersama Tahun Baru',
+        type: 'joint_leave',
+        year: 2027,
+        isRedDate: true,
+      },
+    ];
+
+    const group = renderCalendarGridToFabric({ ...grid, holidays: sameDate }, 1);
+
+    // The national holiday is what the reader is looking for, so it wins.
+    expect(markerFor(group.objects, '2027-01-01')!.fill).toBe(grid.holidayColor);
+  });
+
+  it('still prints the joint leave name verbatim', () => {
+    const group = renderCalendarGridToFabric(
+      { ...grid, holidays: jointLeaveHolidays, showHolidayNames: true },
+      1,
+    );
+
+    expect(texts(group.objects)).toContain('Cuti Bersama Tahun Baru Imlek');
+  });
+});
+
 describe('renderCalendarGridToFabric', () => {
   it('returns a Fabric group', () => {
     const group = renderCalendarGridToFabric({ ...grid, holidays }, 1);

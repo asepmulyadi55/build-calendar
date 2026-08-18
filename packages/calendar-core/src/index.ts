@@ -39,9 +39,11 @@ export {
   formatHolidayLegend,
   hasHoliday,
   hasHolidayData,
+  holidayLegendEntries,
   isRedDate,
   resolveHolidays,
   type Holiday,
+  type HolidayLegendEntry,
   type HolidayMap,
   type HolidayType,
 } from './holidays';

@@ -721,6 +721,116 @@ export const en = {
     back: 'Start another calendar',
   },
 
+  /** The template editor (P1-US-303). */
+  /**
+   * Photo uploads (P1-US-304). Written for a reader whose first language is not
+   * English: short sentences, and every failure says what to do next.
+   */
+  uploads: {
+    dropTitle: 'Drag photos here',
+    dropHint: 'or choose from your device. JPEG, PNG, WebP or HEIC, up to 15 MB each.',
+    choose: 'Choose photos',
+    uploading: 'Uploading {done} of {total}…',
+    galleryTitle: 'My gallery',
+    galleryEmpty: 'Photos you upload appear here, ready to use on any sheet.',
+    galleryHint: 'Photos stay in your gallery, so you can use one on several sheets.',
+    use: 'Use this photo',
+    remove: 'Remove',
+    removeTitle: 'Remove this photo?',
+    removeBody: 'It will be removed from your gallery. This cannot be undone.',
+    removeInUse:
+      'This photo is used in {count} other project. Removing it will leave an empty slot there.',
+    removeInUsePlural:
+      'This photo is used in {count} other projects. Removing it will leave empty slots there.',
+    privacyNote:
+      'We remove location and camera information from every photo before storing it. The original file is never kept.',
+
+    errors: {
+      empty: 'That file is empty. Choose a photo and try again.',
+      tooLarge: 'That photo is larger than 15 MB. Try a smaller version.',
+      unsupportedType: 'That file is not a photo we can use. Use JPEG, PNG, WebP or HEIC.',
+      decodeFailed: 'We could not open that photo. It may be damaged. Try another one.',
+      storageFailed: 'We could not save that photo. Please try again in a moment.',
+      notFound: 'That photo is no longer in your gallery.',
+    },
+
+    /** VLD-RES. Plain language: nobody outside printing knows what DPI means. */
+    resolution: {
+      label: '{dpi} DPI',
+      green: 'This photo is sharp enough to print at this size.',
+      amber: 'This photo will print slightly soft at this size. It is still usable.',
+      red: 'This photo is too small to print at this size. Use a larger version.',
+    },
+
+    crop: {
+      title: 'Fit the photo',
+      zoom: 'Zoom',
+      rotate: 'Rotate 90°',
+      reset: 'Fit automatically',
+      hint: 'Use the sliders to move the photo inside the frame.',
+      done: 'Done',
+    },
+  },
+
+  editor: {
+    close: 'Close',
+    previewExport: 'Preview & export',
+    titleLabel: 'Project title',
+    saving: 'Saving…',
+    saved: 'Saved',
+    unsaved: 'Unsaved changes',
+    saveFailed: 'Could not save. Your work is still here — we will try again.',
+
+    sheetsLabel: 'Sheets',
+    sheetLabel: 'Sheet {index}',
+    slotEmpty: 'Add a photo',
+    textSlotEmpty: 'Add a caption',
+
+    panelSheet: 'Sheet {index}',
+    panelPhoto: 'Photo',
+    panelMonth: 'Month',
+    panelMonthHint: 'Shown as it prints. The calendar always renders in Indonesian.',
+    panelCaption: 'Caption',
+    panelColour: 'Colour',
+    panelLocked: 'Locked by template',
+    panelLockedHint:
+      'Layout, grid position and typography come from the design. They are not editable here.',
+    charactersUsed: '{used} / {max} characters',
+    applyToAll: 'Apply to all sheets',
+    resetSheet: 'Reset this sheet to template',
+    nothingSelected: 'Select a photo or caption on the sheet to edit it.',
+
+    /**
+     * P1-US-305. The legend text itself is Indonesian and comes from
+     * `calendar-core`; only the key explaining the marker is interface copy.
+     */
+    jointLeaveKey: 'Joint leave day',
+    holidayDataUpdated: 'Holiday data updated {date}',
+    holidayDataMissingTitle: 'No holiday data for {year}',
+    holidayDataMissingBody:
+      'This calendar will print without red dates. Indonesian joint leave days are usually announced late in the previous year. Contact us on WhatsApp before printing.',
+    weekStart: 'Week starts on',
+    weekStartMonday: 'Monday',
+    weekStartSunday: 'Sunday',
+    weekStartLocked: 'This template fixes the week start.',
+
+    year: 'Year',
+    yearLockedTitle: 'The year cannot be changed',
+    yearLockedHint:
+      "This calendar is unlocked, and one coin covers one calendar. Duplicate it to make next year's.",
+    duplicate: 'Duplicate',
+
+    undo: 'Undo',
+    redo: 'Redo',
+
+    smallScreenEyebrow: 'Needs a bigger screen',
+    smallScreenTitle: 'The editor works best on a laptop',
+    smallScreenBody:
+      'Arranging photos and text needs more room than a phone can give. Everything else works here — you can still preview your calendar, unlock it, download the file, and pay.',
+    smallScreenPreview: 'Preview this calendar',
+    smallScreenBack: 'Back to projects',
+  },
+
   appShell: {
     projects: 'Projects',
     newCalendar: 'New calendar',

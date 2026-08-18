@@ -773,3 +773,145 @@ body{overflow-x:hidden}
 .editor-facts{margin:16px 0 0 18px;display:grid;gap:7px;font-size:15px;color:var(--ink-70)}
 .editor-back{margin-top:20px}
 .project-title{font-size:clamp(26px,3vw,36px);margin-top:8px}
+
+/* ---------- editor (ported from ds.css when P1-US-303 needed it) ---------- */
+/* ---------- editor ---------- */
+.editor{display:grid;grid-template-columns:150px 1fr 300px;height:calc(100vh - 68px)}
+.ed-sheets{border-right:1px solid var(--rule);background:var(--paper-2);
+  padding:16px 12px;overflow-y:auto;display:grid;gap:10px;align-content:start}
+.ed-thumb{border:1px solid var(--rule);background:#fff;padding:6px;display:block}
+.ed-thumb.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink)}
+.ed-thumb .t{aspect-ratio:3/4;background:var(--paper-3);position:relative}
+.ed-thumb .l{font-family:var(--f-mono);font-size:9.5px;color:var(--ink-45);
+  letter-spacing:.08em;padding-top:5px;text-align:center}
+.ed-canvas{background:var(--paper-3);display:flex;align-items:center;justify-content:center;
+  padding:32px;overflow:auto}
+.ed-panel{border-left:1px solid var(--rule);background:var(--paper);
+  padding:20px 18px;overflow-y:auto;display:grid;gap:20px;align-content:start}
+.panel-group{display:grid;gap:11px}
+.panel-group>h4{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-45);font-weight:500}
+.swatches{display:flex;gap:7px;flex-wrap:wrap}
+.sw{width:26px;height:26px;border:1px solid var(--rule);border-radius:2px}
+.sw.on{box-shadow:0 0 0 2px var(--ink);border-color:var(--ink)}
+.save-state{font-family:var(--f-mono);font-size:11px;color:var(--ink-45);letter-spacing:.06em}
+
+/* ---------- editor is desktop-only ----------
+   Spec NFR-C03: below 1024px show a friendly message, but never block
+   preview, unlock, export or payment. */
+.editor-notice{display:none}
+@media(max-width:1023px){
+  .editor{display:block;height:auto}
+  .ed-sheets,.ed-panel,.ed-canvas{display:none}
+  .editor-notice{
+    display:block;margin:40px auto;max-width:520px;text-align:center;
+    background:#fff;border:1px solid var(--rule);padding:32px 28px;
+  }
+  .editor-notice h2{font-family:var(--f-display);font-weight:700;
+    font-size:24px;letter-spacing:-.025em;margin:14px 0 10px}
+  .editor-notice p{color:var(--ink-70);font-size:15.5px;margin-bottom:22px}
+  .editor-notice .row{justify-content:center;flex-wrap:wrap;gap:10px}
+}
+
+
+/* ---------- editor top bar ---------- */
+.project-title{width:220px;padding:9px 12px;font-size:14.5px}
+.nav-in .row{min-width:0}
+@media(max-width:880px){
+  /* The editor's nav still shows on a phone even though the canvas does
+     not, so the title field must shrink instead of pushing the buttons
+     off screen. */
+  .project-title{width:100%;min-width:0;font-size:16px}
+  .nav-in .row{flex:1;margin-left:0}
+  .save-state{display:none}
+}
+
+
+/* ---------- editor chrome follows the editor ----------
+   Below 1023px the canvas is replaced by a notice, so the editing tools
+   in the top bar must go with it. Leaving them behind produced a squashed
+   title field and two cramped buttons duplicating the actions already
+   offered in the notice card. */
+@media(max-width:1023px){
+  .editor-nav .nav-in{justify-content:space-between}
+  .editor-nav .row,
+  .editor-nav .project-title,
+  .editor-nav .save-state,
+  .editor-nav .nav-cta{display:none}
+}
+
+/* Navs without a hamburger (sitemap, project plan) carry two buttons that
+   only just fit at 440px. Let the bar wrap rather than overflow. */
+@media(max-width:560px){
+  .nav-in{flex-wrap:wrap;height:auto;padding-block:10px;gap:10px}
+  .nav-cta{flex-wrap:wrap}
+}
+
+.ed-sheet{max-width:400px;width:100%}
+.ed-cal{position:relative}
+.ed-slot{position:relative;width:100%;border:0;padding:0;background:none;display:block}
+.ed-slot-editable{cursor:pointer}
+.ed-slot-editable:hover{box-shadow:inset 0 0 0 2px var(--ink-25)}
+.ed-slot-selected{box-shadow:inset 0 0 0 2px var(--ink)}
+.ed-text-slot{margin-top:12px;font-size:14px;color:var(--ink-70);text-align:left;width:100%;
+  background:none;border:0;padding:4px 6px}
+.ed-toolbar{display:flex;gap:8px;margin-bottom:14px}
+.ed-empty{color:var(--ink-45);font-size:14px}
+.ed-title-row{gap:14px;margin-left:24px}
+.ed-nav-cta{margin-left:auto}
+
+/* Photo slots and the gallery (P1-US-304). Tokens only — no new colours. */
+.ed-slot-filled .ed-slot-img{display:block;width:100%;height:100%;object-fit:cover;
+  transform-origin:center}
+.ed-slot-img{pointer-events:none}
+
+.photo-picker{display:block}
+.photo-picker h4{margin-top:18px}
+
+.ed-selected{display:flex;gap:12px;align-items:center;padding:12px}
+.ed-selected-img{width:72px;height:72px;object-fit:cover;flex:none;
+  border:1px solid var(--rule)}
+
+/* The resolution indicator. Colour is backed by a shape, because colour alone
+   fails for a colour-blind reader. */
+.dpi{display:flex;align-items:center;gap:6px;font-weight:500;margin:0}
+.dpi-dot{width:8px;height:8px;border-radius:50%;flex:none}
+.dpi-green{color:var(--ok)}
+.dpi-green .dpi-dot{background:var(--ok)}
+.dpi-amber{color:var(--warn)}
+.dpi-amber .dpi-dot{background:var(--warn);border-radius:2px}
+.dpi-red{color:var(--merah)}
+.dpi-red .dpi-dot{background:var(--merah);border-radius:0;
+  clip-path:polygon(50% 0,100% 100%,0 100%)}
+
+.dropzone{border:1px dashed var(--rule);background:var(--paper-2);
+  padding:22px;text-align:center;margin-top:14px}
+.dropzone.on{border-color:var(--merah);background:var(--merah-soft)}
+.dropzone b{display:block;margin-bottom:4px}
+.dropzone .btn{margin-top:12px}
+
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  list-style:none;padding:0;margin:10px 0}
+.gallery li{position:relative}
+.gallery-item{display:block;width:100%;aspect-ratio:1;padding:0;
+  border:1px solid var(--rule);background:var(--paper-2);cursor:pointer}
+.gallery-item.on{border-color:var(--merah);box-shadow:0 0 0 2px var(--merah-soft)}
+.gallery-item img{display:block;width:100%;height:100%;object-fit:cover}
+.gallery-remove{position:absolute;top:2px;right:2px;width:22px;height:22px;
+  line-height:1;border:1px solid var(--rule);background:var(--paper);
+  cursor:pointer;font-size:14px}
+
+.crop input[type=range]{width:100%}
+.crop-pan{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center}
+.crop-actions{display:flex;gap:8px;margin-top:10px}
+
+/* Holiday legend and freshness (P1-US-305). */
+.legend span i{display:inline-block;width:7px;height:7px;border-radius:50%;
+  background:var(--merah);margin-right:5px;vertical-align:middle}
+/* Hollow ring for joint leave, matching the printed marker. Written after — and
+   at equal specificity to — the solid rule above, so it wins. */
+.legend span.legend-joint i{background:none;border:1.5px solid var(--merah)}
+.legend-key{color:var(--ink-45)}
+.ed-holiday-warn{border-color:var(--merah);background:var(--merah-soft);
+  padding:14px;margin-bottom:14px}
+.ed-holiday-date{margin-bottom:10px}

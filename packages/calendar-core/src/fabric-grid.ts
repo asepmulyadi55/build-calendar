@@ -59,6 +59,9 @@ export interface FabricRectObject {
   readonly rx: number;
   readonly ry: number;
   readonly fill: string;
+  /** Outline, used for the hollow joint-leave marker. Solid markers omit it. */
+  readonly stroke?: string;
+  readonly strokeWidth?: number;
   readonly originX: 'left' | 'center' | 'right';
   readonly originY: 'top' | 'center' | 'bottom';
 }
@@ -207,6 +210,12 @@ export function renderCalendarGridToFabric(
       const entries = holidays.get(cell.date) ?? [];
 
       // The marker dot, so a holiday reads as one even in monochrome print.
+      //
+      // A date carrying only joint leave (*cuti bersama*) gets a hollow ring
+      // instead of a solid dot. Both are non-working days and both stay red, but
+      // the shape survives a monochrome print where the colour does not, and a
+      // reader planning time off needs to tell them apart (P1-US-305).
+      const jointLeaveOnly = entries.every((holiday) => holiday.type === 'joint_leave');
       const markerSize = 0.5 * scale;
       objects.push({
         type: 'Rect',
@@ -217,7 +226,9 @@ export function renderCalendarGridToFabric(
         height: round(markerSize),
         rx: round(markerSize / 2),
         ry: round(markerSize / 2),
-        fill: props.holidayColor,
+        ...(jointLeaveOnly
+          ? { fill: 'transparent', stroke: props.holidayColor, strokeWidth: round(markerSize / 5) }
+          : { fill: props.holidayColor }),
         originX: 'center',
         originY: 'top',
       });

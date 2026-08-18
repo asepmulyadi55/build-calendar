@@ -29,6 +29,8 @@ export const routes = {
   newProject: '/app/new',
   projects: '/app/projects',
   projectEditor: (id: string) => `/projects/${id}/edit`,
+  /** One derivative of the caller's own photo. The bucket itself stays private. */
+  asset: (id: string, variant: 'thumb' | 'preview' | 'print') => `/api/assets/${id}/${variant}`,
   coins: '/coins',
 } as const;
 

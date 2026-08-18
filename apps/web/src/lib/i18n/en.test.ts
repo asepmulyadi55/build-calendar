@@ -28,6 +28,13 @@ const INDONESIAN_CALENDAR_WORDS = [
   'Minggu',
 ];
 
+/**
+ * Interface words that have slipped in before. `Duplikat` shipped in the editor
+ * panel and the month/weekday guard above did not catch it. Only words with no
+ * English homograph belong here.
+ */
+const INDONESIAN_INTERFACE_WORDS = ['Duplikat', 'Simpan', 'Batal', 'Hapus', 'Unduh', 'Lanjut'];
+
 function flatten(value: unknown, path: string[] = []): [string, string][] {
   if (typeof value === 'string') return [[path.join('.'), value]];
   if (value && typeof value === 'object') {
@@ -51,6 +58,13 @@ describe('en.ts', () => {
   it('contains no Indonesian calendar vocabulary', () => {
     const offenders = entries.filter(([, text]) =>
       INDONESIAN_CALENDAR_WORDS.some((word) => new RegExp(`\\b${word}\\b`).test(text)),
+    );
+    expect(offenders).toEqual([]);
+  });
+
+  it('contains no Indonesian interface vocabulary', () => {
+    const offenders = entries.filter(([, text]) =>
+      INDONESIAN_INTERFACE_WORDS.some((word) => new RegExp(`\\b${word}\\b`, 'i').test(text)),
     );
     expect(offenders).toEqual([]);
   });

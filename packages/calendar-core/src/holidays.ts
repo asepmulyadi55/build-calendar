@@ -108,11 +108,37 @@ export function hasHolidayData(year: number, holidays: readonly Holiday[]): bool
  * Two holidays on one date produce two lines.
  */
 export function formatHolidayLegend(holidays: HolidayMap): string[] {
+  return holidayLegendEntries(holidays).map((entry) => entry.line);
+}
+
+export interface HolidayLegendEntry {
+  /** `1 Jan — Tahun Baru Masehi`, exactly as it prints. */
+  readonly line: string;
+  /** `1 Jan`. */
+  readonly label: string;
+  /** Verbatim official name. */
+  readonly name: string;
+  readonly type: HolidayType;
+  readonly date: string;
+}
+
+/**
+ * The same legend, but keeping each entry's type so the caller can style joint
+ * leave (*cuti bersama*) distinctly from a national holiday (P1-US-305). The
+ * text is identical to `formatHolidayLegend` — there is one legend, not two.
+ */
+export function holidayLegendEntries(holidays: HolidayMap): HolidayLegendEntry[] {
   return [...holidays.entries()]
     .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
     .flatMap(([date, entries]) => {
       const parsed = parseIsoDate(date);
       const label = `${String(parsed.getUTCDate())} ${monthNameShortId(parsed.getUTCMonth() + 1)}`;
-      return entries.map((holiday) => `${label} — ${holiday.name}`);
+      return entries.map((holiday) => ({
+        line: `${label} — ${holiday.name}`,
+        label,
+        name: holiday.name,
+        type: holiday.type,
+        date,
+      }));
     });
 }

@@ -3,6 +3,7 @@ import { buildMonthMatrix } from './month-matrix';
 import {
   formatHolidayLegend,
   hasHolidayData,
+  holidayLegendEntries,
   isRedDate,
   resolveHolidays,
   type Holiday,
@@ -137,6 +138,29 @@ describe('hasHolidayData', () => {
 
   it('is true when at least one holiday exists for the year', () => {
     expect(hasHolidayData(2027, [holiday('2027-01-01', 'Tahun Baru Masehi')])).toBe(true);
+  });
+});
+
+describe('holidayLegendEntries', () => {
+  it('carries the type so joint leave can be styled distinctly', () => {
+    const map = resolveHolidays(2027, 1, [
+      holiday('2027-01-01', 'Tahun Baru Masehi'),
+      holiday('2027-01-08', 'Cuti Bersama Tahun Baru Imlek', { type: 'joint_leave' }),
+    ]);
+
+    const entries = holidayLegendEntries(map);
+
+    expect(entries.map((entry) => entry.type)).toEqual(['national', 'joint_leave']);
+    expect(entries[1]!.line).toBe('8 Jan — Cuti Bersama Tahun Baru Imlek');
+  });
+
+  it('produces exactly the lines the string legend does — there is one legend', () => {
+    const map = resolveHolidays(2027, 1, [
+      holiday('2027-01-01', 'Tahun Baru Masehi'),
+      holiday('2027-01-08', 'Cuti Bersama Tahun Baru Imlek', { type: 'joint_leave' }),
+    ]);
+
+    expect(holidayLegendEntries(map).map((entry) => entry.line)).toEqual(formatHolidayLegend(map));
   });
 });
 

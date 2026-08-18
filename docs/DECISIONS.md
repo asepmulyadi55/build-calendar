@@ -258,6 +258,28 @@ Two things follow that are worth stating. Seeded rows carry a `design_key` point
 
 The format is documented in `docs/template-format.md`.
 
+## ADR-0012 — Judgement calls made building the editor, uploads and the grid
+
+**Date:** 2026-08 · **Status:** Accepted
+
+**Context.** P1-US-303 to P1-US-305 left five things open, and two of them affect what a customer receives.
+
+**Decision.**
+
+1. **The Duplicate button reads "Duplicate", not "Duplikat".** P1-US-303 quotes the label as `"Duplikat"`, but the language rule in master §10.7 is unambiguous: interface copy is English, and only what is printed on a sheet is Indonesian. A button is interface. The story text is read as a leftover from the Indonesian-first draft. `en.test.ts` now fails on a short list of Indonesian interface words, because the month-and-weekday guard did not catch this one and would not catch the next.
+
+2. **Joint leave is distinguished by shape, not colour.** *Cuti bersama* are non-working days and stay red, so colour cannot carry the distinction. The marker is a hollow ring where a national holiday is a solid dot, and the legend repeats the ring. Shape survives a monochrome print and is legible to a colour-blind reader; colour alone is neither.
+
+3. **A photo's derivatives are written to R2 before its row is created, and the row stores keys only.** Same reasoning as ADR-0011: an orphan object costs a fraction of a cent, a row pointing at nothing is a broken slot the user cannot fix. If any of the three writes fails, all three are deleted and no row is created.
+
+4. **Uploads are processed one file at a time, not in parallel.** `sharp` decodes the full image into memory, and a 15 MB HEIC from a modern phone is a large buffer. Several in flight together is the shape of an out-of-memory on a 1 GB box (RQ-MEM-*), and the user-visible cost is a progress counter instead of a spinner.
+
+5. **The week start is a per-design property that a template opts into.** `slot_schema.allowWeekStart` defaults to absent, meaning no. A grid is drawn for one arrangement and most templates assume Monday; switching every sheet at once — never one month — is the only safe form of the control.
+
+**Consequences.** The resolution indicator divides the stored print-derivative width by the slot's printed width in millimetres, so zooming in lowers the reported DPI, which is correct: zoom spends pixels. `ProjectAsset` rows are soft-deleted and their objects removed, so a project still referencing a deleted photo shows an empty slot rather than a broken image — which is what the deletion warning tells the user will happen.
+
+One thing is deliberately unfinished. The crop values (`panX`, `panY`, `zoom`, `rotation`) are stored and previewed with a CSS transform, but the renderer does not yet consume them. Until it does, editor-to-export parity for cropping is unproven, and AR-01 makes that a blocker the moment P1-US-401 renders a slot. The fitting maths has to be written once, in `calendar-core`, and used by both.
+
 ## Template for new entries
 
 Copy the block below verbatim when adding a decision. It is shown as raw markdown on purpose — so the heading and bold syntax stay visible and copyable rather than rendering as formatting.
