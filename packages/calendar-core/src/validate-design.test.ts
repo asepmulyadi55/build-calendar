@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { CURRENT_SCHEMA_VERSION, createCalendarGridObject } from './design';
-import { DEFAULT_FONT_ID, fontById } from './fonts';
-import { validateCalendarDesign, type PresetConstraints } from './validate-design';
+import { CURRENT_SCHEMA_VERSION, createCalendarGridObject } from './design.js';
+import { DEFAULT_FONT_ID, fontById } from './fonts.js';
+import { validateCalendarDesign, type PresetConstraints } from './validate-design.js';
 
 /**
  * P1-US-702: a template is imported from a file, so nothing upstream has checked

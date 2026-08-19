@@ -83,7 +83,11 @@ services:
     # over the Compose network, authenticated with RENDERER_SHARED_SECRET.
     expose:
       - '4000'
-    mem_limit: 500m
+    # RQ-MEM-06 raised from 500m to 600m. The spike measured a warm A2 job peaking
+    # at 393-430 MB against a 500 MB cap — it fits, but a heavier template with a
+    # second image would not, and a container that hits its own limit fails a job
+    # rather than degrading. See spike/REPORT.md §3.3 and DECISIONS.md ADR-0013.
+    mem_limit: 600m
 
   caddy:
     image: caddy:2-alpine

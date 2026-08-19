@@ -23,9 +23,9 @@ export {
   weekdayNameId,
   type CalendarLocale,
   type WeekStart,
-} from './locale';
+} from './locale.js';
 
-export { PRINT_DPI, SCREEN_DPI, mmToPt, mmToPx, ptToMm, pxToMm } from './units';
+export { PRINT_DPI, SCREEN_DPI, mmToPt, mmToPx, ptToMm, pxToMm } from './units.js';
 
 export {
   buildMonthMatrix,
@@ -33,7 +33,7 @@ export {
   parseIsoDate,
   type MonthCell,
   type MonthMatrix,
-} from './month-matrix';
+} from './month-matrix.js';
 
 export {
   formatHolidayLegend,
@@ -46,7 +46,7 @@ export {
   type HolidayLegendEntry,
   type HolidayMap,
   type HolidayType,
-} from './holidays';
+} from './holidays.js';
 
 export {
   DEFAULT_FONT_ID,
@@ -56,7 +56,7 @@ export {
   requiredDebianPackages,
   type AllowedFont,
   type FontCategory,
-} from './fonts';
+} from './fonts.js';
 
 export {
   CURRENT_SCHEMA_VERSION,
@@ -73,7 +73,7 @@ export {
   type Sheet,
   type SlotDefinition,
   type TextObject,
-} from './design';
+} from './design.js';
 
 export {
   renderCalendarGridToFabric,
@@ -83,7 +83,7 @@ export {
   type FabricObject,
   type FabricRectObject,
   type FabricTextObject,
-} from './fabric-grid';
+} from './fabric-grid.js';
 
 export {
   validateCalendarDesign,
@@ -91,4 +91,6 @@ export {
   type ValidationCode,
   type ValidationIssue,
   type ValidationResult,
-} from './validate-design';
+} from './validate-design.js';
+
+export { renderSheetToSvg, type RenderSheetOptions, type SheetImage } from './svg.js';

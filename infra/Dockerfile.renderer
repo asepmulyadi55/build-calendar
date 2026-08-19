@@ -1,4 +1,5 @@
-# Renderer worker. Runs under mem_limit 500m (RQ-MEM-06).
+# Renderer worker. Runs under mem_limit 600m (RQ-MEM-06, raised from 500m — see
+# DECISIONS.md ADR-0013).
 #
 # Chromium and every allowlisted font ship inside this image and are never fetched
 # at render time (`01-…` §5.5). Adding a font to the picker without rebuilding this
@@ -12,6 +13,7 @@ FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY apps/web/package.json apps/web/
 COPY apps/renderer/package.json apps/renderer/
+COPY packages/calendar-core/package.json packages/calendar-core/
 COPY packages/db/package.json packages/db/
 COPY packages/ui/package.json packages/ui/
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
@@ -46,7 +48,11 @@ RUN groupadd --system --gid 1001 nodejs \
 COPY --from=build --chown=renderer:nodejs /out/node_modules ./node_modules
 COPY --from=build --chown=renderer:nodejs /repo/apps/renderer/dist ./dist
 
+
 USER renderer
 EXPOSE 4000
 
-CMD ["node", "dist/index.js"]
+# `calendar-core` ships raw TypeScript, so the renderer's build compiles it into its
+# own dist alongside the service — which is why the entrypoint is nested rather than
+# `dist/index.js`. See apps/renderer/tsconfig.build.json.
+CMD ["node", "dist/apps/renderer/src/index.js"]

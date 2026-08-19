@@ -21,7 +21,17 @@ const ascii = (bytes: Uint8Array, offset: number, length: number): string =>
   String.fromCharCode(...bytes.subarray(offset, offset + length));
 
 /** The HEIF brands an iPhone actually writes. */
-const HEIF_BRANDS = new Set(['heic', 'heix', 'hevc', 'hevx', 'heim', 'heis', 'hevm', 'mif1', 'msf1']);
+const HEIF_BRANDS = new Set([
+  'heic',
+  'heix',
+  'hevc',
+  'hevx',
+  'heim',
+  'heis',
+  'hevm',
+  'mif1',
+  'msf1',
+]);
 
 export function detectImageType(bytes: Uint8Array): DetectedType | null {
   if (bytes.length < 12) return null;
@@ -61,8 +71,7 @@ export function detectImageType(bytes: Uint8Array): DetectedType | null {
 export type UploadRejection = 'empty' | 'tooLarge' | 'unsupportedType';
 
 export type UploadValidation =
-  | { ok: true; mime: UploadMime }
-  | { ok: false; reason: UploadRejection };
+  { ok: true; mime: UploadMime } | { ok: false; reason: UploadRejection };
 
 /** @param filename kept for the gallery label only. It never decides anything. */
 export function validateUpload(bytes: Uint8Array, _filename: string): UploadValidation {

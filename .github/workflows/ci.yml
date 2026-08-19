@@ -53,3 +53,25 @@ jobs:
           # Prisma refuses to load without them.
           DATABASE_URL: postgresql://user:pass@localhost:6543/postgres?pgbouncer=true
           DIRECT_URL: postgresql://user:pass@localhost:5432/postgres
+
+  # P1-US-601 makes this a release blocker: the A2 single sheet is the heaviest page
+  # in the catalogue, and production is a 1 GB Lightsail box. Separate job because it
+  # builds the renderer image and takes minutes, not seconds.
+  renderer-memory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Renders WALL-1 in a container capped at 1 GB, with `--network none` so a
+      # font or image fetched at render time fails here rather than in production.
+      - name: Renderer memory regression (RQ-MEM)
+        run: pnpm test:memory

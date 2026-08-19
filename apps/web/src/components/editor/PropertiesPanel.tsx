@@ -74,11 +74,7 @@ export function PropertiesPanel({
           <h4>{en.editor.panelPhoto}</h4>
           <PhotoPicker
             slotWidthMm={slotWidthMm(sheet, entry.id)}
-            value={
-              selectedValue && 'assetId' in selectedValue
-                ? selectedValue
-                : undefined
-            }
+            value={selectedValue && 'assetId' in selectedValue ? selectedValue : undefined}
             projectId={projectId}
             onChange={(next) => {
               dispatch(

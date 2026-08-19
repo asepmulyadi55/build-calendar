@@ -42,11 +42,7 @@ export const DERIVATIVES = {
   print: { longEdge: 5031, quality: 90 },
 } as const;
 
-async function derive(
-  source: Buffer,
-  longEdge: number,
-  quality: number,
-): Promise<Derivative> {
+async function derive(source: Buffer, longEdge: number, quality: number): Promise<Derivative> {
   const output = await sharp(source)
     // Never enlarge: `withoutEnlargement` keeps a small photo at its own size.
     .resize({ width: longEdge, height: longEdge, fit: 'inside', withoutEnlargement: true })
@@ -69,10 +65,7 @@ export async function processUpload(input: Buffer, _mime: string): Promise<Proce
   // One decode for all three derivatives. `rotate()` with no argument applies the
   // EXIF orientation tag to the pixels; the JPEG encoder below then writes no
   // metadata at all, which is what drops GPS, camera model, ICC and XMP together.
-  const normalised = await sharp(input)
-    .rotate()
-    .jpeg({ quality: 100, mozjpeg: false })
-    .toBuffer();
+  const normalised = await sharp(input).rotate().jpeg({ quality: 100, mozjpeg: false }).toBuffer();
 
   const [thumb, preview, print] = await Promise.all([
     derive(normalised, DERIVATIVES.thumb.longEdge, DERIVATIVES.thumb.quality),

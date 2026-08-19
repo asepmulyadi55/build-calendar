@@ -76,9 +76,7 @@ export async function uploadPhotoAction(formData: FormData): Promise<UploadResul
       message: error instanceof Error ? error.message : 'unknown error',
     });
     // Best effort: do not leave a partial set behind.
-    await Promise.all(
-      Object.values(keys).map((key) => deleteObject(key).catch(() => undefined)),
-    );
+    await Promise.all(Object.values(keys).map((key) => deleteObject(key).catch(() => undefined)));
     return { ok: false, error: en.uploads.errors.storageFailed };
   }
 

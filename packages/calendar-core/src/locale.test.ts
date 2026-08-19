@@ -8,7 +8,7 @@ import {
   monthNameId,
   monthNameShortId,
   weekdayHeaderLabels,
-} from './locale';
+} from './locale.js';
 
 describe('Indonesian tables', () => {
   it('lists the twelve months in Bahasa Indonesia', () => {

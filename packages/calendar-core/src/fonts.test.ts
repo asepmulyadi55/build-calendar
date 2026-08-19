@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_FONT_ID, FONT_ALLOWLIST, fontById, isAllowedFontFamily } from './fonts';
+import { DEFAULT_FONT_ID, FONT_ALLOWLIST, fontById, isAllowedFontFamily } from './fonts.js';
 
 describe('font allowlist', () => {
   it('is not empty', () => {

@@ -22,8 +22,8 @@ Every session written out. Copy the block, paste it into Claude Code from the re
 | 4 | 2 | `P1-US-201`–`203` | `signin`, `signup` | **done** · 5 items partial |
 | 5 | 7 | `P1-US-702` | `admin` | **done** · 2 items partial |
 | 6 | 3 | `P1-US-301`, `302` | `app-new` | **done** |
-| 7 | 3 | `P1-US-303`, `304`, `305` | `app-editor` | |
-| 8 | 6 | `P1-US-601` | — renderer, no UI | |
+| 7 | 3 | `P1-US-303`, `304`, `305` | `app-editor` | **done** · browser pass outstanding |
+| 8 | 6 | `P1-US-601` | — renderer, no UI | **done** · memory test not yet run |
 | 9 | 4 | `P1-US-401`, `402` | `app-preview` | |
 | 10 | 5 | `P1-US-501`, `502`, `503` | `app-coins`, `admin` | |
 | 11 | 6 | `P1-US-602`, `603` | `app-export` | |
@@ -356,6 +356,16 @@ Do not begin the next epic.
 **Check by hand:** upload a photo taken on your own phone and confirm the stored derivatives contain no GPS data.
 
 ---
+
+## Session 8 — The renderer ✅ done
+
+**Status: done — memory regression test written and wired to CI, but never executed**
+
+> **Ran 2026-08-18.** The renderer is a real service: Design JSON becomes a scene through `calendar-core`, one sheet at a time becomes SVG, gets wrapped in a page whose `@page` size is trim plus bleed, and Chromium writes a single-page PDF that `pdf-lib` merges. Rendered against the A2 fixture on the development machine the page box came out 426.13 × 600.03 mm — the spike's number to two decimal places — with embedded font subsets, so text is vector. Chromium launches on demand and dies 60 s idle, images are pre-sized by sharp before it sees them, concurrency stays 1, and every request that is not `file:`/`data:`/`about:` is aborted inside the page. 360 tests pass; typecheck, lint, format, `check:rls` and `next build` are clean.
+>
+> **The one thing that has not run is the test that matters most.** `pnpm test:memory` builds the renderer image and renders A2 under `docker run -m 1g --network none`; Docker Desktop was not running, so it has never been executed. It is written, wired to CI as its own job, and is a release blocker there. Start Docker and run it before trusting any of the above on a 1 GB box.
+>
+> Rendering A2 on Windows also exposed a real trap: with DejaVu absent, Chromium silently embedded Times New Roman and the PDF looked fine. The harness now fails on any font the image does not install (ADR-0013).
 
 ## Session 8 — The renderer
 

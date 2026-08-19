@@ -9,8 +9,13 @@
  * schema evolves (AR-06). Bump `CURRENT_SCHEMA_VERSION` and add a migration step
  * when the shape changes.
  */
-import { DEFAULT_FONT_ID, fontById, isAllowedFontFamily } from './fonts';
-import { CALENDAR_LOCALE, DEFAULT_WEEK_START, type CalendarLocale, type WeekStart } from './locale';
+import { DEFAULT_FONT_ID, fontById, isAllowedFontFamily } from './fonts.js';
+import {
+  CALENDAR_LOCALE,
+  DEFAULT_WEEK_START,
+  type CalendarLocale,
+  type WeekStart,
+} from './locale.js';
 
 export const CURRENT_SCHEMA_VERSION = 1;
 

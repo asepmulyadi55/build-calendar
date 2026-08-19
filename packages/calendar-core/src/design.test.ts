@@ -5,8 +5,8 @@ import {
   isCalendarGridObject,
   isSupportedSchemaVersion,
   type CalendarDesign,
-} from './design';
-import { DEFAULT_FONT_ID, fontById } from './fonts';
+} from './design.js';
+import { DEFAULT_FONT_ID, fontById } from './fonts.js';
 
 const design: CalendarDesign = {
   schemaVersion: CURRENT_SCHEMA_VERSION,

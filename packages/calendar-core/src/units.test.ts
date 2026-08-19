@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PRINT_DPI, SCREEN_DPI, mmToPx, pxToMm, mmToPt, ptToMm } from './units';
+import { PRINT_DPI, SCREEN_DPI, mmToPx, pxToMm, mmToPt, ptToMm } from './units.js';
 
 describe('mmToPx / pxToMm', () => {
   it('converts A3-plus-bleed to the pixel count a 300 DPI slot needs', () => {

@@ -6,7 +6,7 @@
  * machine east or west of the renderer, which would silently print a wrong
  * calendar — the kind of bug nobody finds until it is on paper.
  */
-import { DEFAULT_WEEK_START, type WeekStart } from './locale';
+import { DEFAULT_WEEK_START, type WeekStart } from './locale.js';
 
 export interface MonthCell {
   /** `YYYY-MM-DD`. The key used to look up holidays. */

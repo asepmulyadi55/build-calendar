@@ -18,10 +18,10 @@
  * `scale` is pixels per millimetre. Millimetres are the stored unit (AR-04); this
  * function is the only place they become pixels.
  */
-import { isRedDate, hasHoliday, resolveHolidays, type Holiday } from './holidays';
-import { buildMonthMatrix, isoWeekNumber } from './month-matrix';
-import { weekdayHeaderLabels } from './locale';
-import type { CalendarGridObject } from './design';
+import { isRedDate, hasHoliday, resolveHolidays, type Holiday } from './holidays.js';
+import { buildMonthMatrix, isoWeekNumber } from './month-matrix.js';
+import { weekdayHeaderLabels } from './locale.js';
+import type { CalendarGridObject } from './design.js';
 
 export interface FabricTextObject {
   readonly type: 'Text';

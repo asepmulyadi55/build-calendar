@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { renderCalendarGridToFabric, type FabricObject } from './fabric-grid';
-import { createCalendarGridObject } from './design';
-import type { Holiday } from './holidays';
+import { renderCalendarGridToFabric, type FabricObject } from './fabric-grid.js';
+import { createCalendarGridObject } from './design.js';
+import type { Holiday } from './holidays.js';
 
 const holidays: Holiday[] = [
   {
@@ -46,8 +46,7 @@ const jointLeaveHolidays: Holiday[] = [
 
 const markerFor = (objects: readonly FabricObject[], date: string) =>
   objects.find((o) => o.type === 'Rect' && o.id === `marker-${date}`) as
-    | { fill: string; stroke?: string; strokeWidth?: number }
-    | undefined;
+    { fill: string; stroke?: string; strokeWidth?: number } | undefined;
 
 describe('joint leave days', () => {
   it('renders a hollow marker, where a national holiday is solid', () => {

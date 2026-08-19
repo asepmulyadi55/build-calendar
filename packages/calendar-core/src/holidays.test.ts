@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildMonthMatrix } from './month-matrix';
+import { buildMonthMatrix } from './month-matrix.js';
 import {
   formatHolidayLegend,
   hasHolidayData,
@@ -7,7 +7,7 @@ import {
   isRedDate,
   resolveHolidays,
   type Holiday,
-} from './holidays';
+} from './holidays.js';
 
 const holiday = (date: string, name: string, extra: Partial<Holiday> = {}): Holiday => ({
   date,

@@ -13,9 +13,9 @@
  * Every problem is collected rather than throwing on the first, because fixing a
  * twelve-sheet template one error per attempt is a bad afternoon.
  */
-import { CURRENT_SCHEMA_VERSION, isSupportedSchemaVersion, type SlotDefinition } from './design';
-import { CALENDAR_LOCALE } from './locale';
-import { isAllowedFontFamily } from './fonts';
+import { CURRENT_SCHEMA_VERSION, isSupportedSchemaVersion, type SlotDefinition } from './design.js';
+import { CALENDAR_LOCALE } from './locale.js';
+import { isAllowedFontFamily } from './fonts.js';
 
 export type ValidationCode =
   | 'notAnObject'

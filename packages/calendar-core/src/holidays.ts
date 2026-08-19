@@ -6,8 +6,8 @@
  * designations, and translating one makes the calendar factually wrong
  * (master spec §6.2, §10.7).
  */
-import { monthNameShortId } from './locale';
-import { parseIsoDate, type MonthCell } from './month-matrix';
+import { monthNameShortId } from './locale.js';
+import { parseIsoDate, type MonthCell } from './month-matrix.js';
 
 export type HolidayType = 'national' | 'joint_leave' | 'religious' | 'international';
 

@@ -30,10 +30,7 @@ export interface Resolution {
   messageKey: ResolutionBand;
 }
 
-export function resolutionFor(input: {
-  photoWidthPx: number;
-  slotWidthMm: number;
-}): Resolution {
+export function resolutionFor(input: { photoWidthPx: number; slotWidthMm: number }): Resolution {
   const dpi = Math.round(effectiveDpi(input.photoWidthPx, input.slotWidthMm));
   const band = resolutionBand(dpi);
   return { dpi, band, messageKey: band };

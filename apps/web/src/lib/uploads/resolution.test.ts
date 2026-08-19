@@ -57,6 +57,8 @@ describe('resolutionFor', () => {
   });
 
   it('rounds the DPI, because a user does not need two decimal places', () => {
-    expect(Number.isInteger(resolutionFor({ photoWidthPx: 1234, slotWidthMm: 297 }).dpi)).toBe(true);
+    expect(Number.isInteger(resolutionFor({ photoWidthPx: 1234, slotWidthMm: 297 }).dpi)).toBe(
+      true,
+    );
   });
 });

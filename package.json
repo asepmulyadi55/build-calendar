@@ -23,7 +23,8 @@
     "db:migrate": "pnpm --filter @buildcalendar/db migrate",
     "db:deploy": "pnpm --filter @buildcalendar/db migrate:deploy",
     "db:seed": "pnpm --filter @buildcalendar/db seed",
-    "db:studio": "pnpm --filter @buildcalendar/db studio"
+    "db:studio": "pnpm --filter @buildcalendar/db studio",
+    "test:memory": "pnpm --filter @buildcalendar/renderer test:memory"
   },
   "devDependencies": {
     "@eslint/js": "9.39.5",

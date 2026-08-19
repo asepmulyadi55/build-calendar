@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildMonthMatrix, type MonthCell } from './month-matrix';
+import { buildMonthMatrix, type MonthCell } from './month-matrix.js';
 
 const dates = (matrix: readonly (readonly MonthCell[])[]) =>
   matrix.map((row) => row.map((c) => c.date));

@@ -280,6 +280,32 @@ The format is documented in `docs/template-format.md`.
 
 One thing is deliberately unfinished. The crop values (`panX`, `panY`, `zoom`, `rotation`) are stored and previewed with a CSS transform, but the renderer does not yet consume them. Until it does, editor-to-export parity for cropping is unproven, and AR-01 makes that a blocker the moment P1-US-401 renders a slot. The fitting maths has to be written once, in `calendar-core`, and used by both.
 
+## ADR-0013 — Judgement calls made building the renderer
+
+**Date:** 2026-08 · **Status:** Accepted
+
+**Context.** P1-US-601 turned the spike into a service. The spike answered the two questions it was asked — the vector path is print-ready, and A2 fits in 1 GB — and left three decisions open (`spike/REPORT.md` §3). Building the real thing forced three more.
+
+**Decision.**
+
+1. **`mem_limit` for the renderer is raised from 500m to 600m** (spike §3.3, RQ-MEM-06). Warm A2 peaks at 393–430 MB of non-cache memory. It fits under 500m, but with no room for a heavier template — more text objects, a second image — and a container that hits its own limit fails a job rather than degrading. The 100 MB comes out of headroom the 2 GB swap file (RQ-MEM-05) already exists to cover.
+
+2. **The renderer holds no database connection.** Everything a job needs — sheets, holidays, image keys, options — arrives in the BullMQ payload, and the only I/O is R2 plus Redis. A render can take five minutes, and a five-minute render pinning a Postgres connection on a 1 GB box is a cost with no benefit. It also keeps the service's idle footprint to the worker itself.
+
+3. **Photos are fetched, and the PDF written, outside the render.** "No outbound network access during rendering" is enforced at the page: every request that is not `file:`, `data:` or `about:` is aborted. Design JSON is user data, so without that guard an `<image href="http://169.254.169.254/…">` turns the renderer into an SSRF proxy inside the production network. The memory regression test goes further and runs the container with `--network none`, which is why the fixture generates its own photo rather than downloading one.
+
+4. **The SVG emitter lives in `calendar-core`, not in the renderer.** AR-01 allows one engine. The renderer owns page geometry, Chromium and merging; the scene itself is built from the same objects the editor draws.
+
+5. **A font outside `FONT_ALLOWLIST` fails the job rather than rendering.** Chromium substitutes a missing font silently, and the defect only appears on paper. This was not theoretical: rendering the A2 fixture on the development machine, where DejaVu is not installed, embedded Times New Roman instead — the PDF looked fine and was wrong. The memory regression test now asserts that every embedded font is one the image installs.
+
+6. **`calendar-core`'s internal imports carry explicit `.js` extensions.** The package ships raw TypeScript so the editor and the renderer read the same source, but the renderer compiles that source and runs it under Node, where ESM requires the extension. TypeScript and Vitest resolve `.js` back to `.ts`; webpack does not, so `next.config.ts` sets `resolve.extensionAlias`. The alternative — publishing a built `calendar-core` — introduces a build ordering step and the possibility of a stale artefact drifting from the source both halves are meant to share.
+
+**Consequences.** The renderer's compiled entrypoint is `dist/apps/renderer/src/index.js` rather than `dist/index.js`, because its `rootDir` spans the workspace in order to compile `calendar-core` alongside it. Every renderer import of that package goes through `src/calendar-core.ts`, a one-line re-export, because a bare specifier survives emit unchanged and would send Node back to the raw TypeScript at runtime.
+
+Detecting vector text by scanning the PDF content stream for `Tj` does not work — Chromium writes those streams FlateDecode-compressed, so a correct vector PDF scans as empty. The reliable signal is the page's font resources: a rasterised page has none, and every embedded subset carries a six-letter tag. That is what the harness reports.
+
+The spike's remaining open item is unchanged: nobody has printed one of these. That is the other half of P1-US-000's exit criteria and it is still owed.
+
 ## Template for new entries
 
 Copy the block below verbatim when adding a decision. It is shown as raw markdown on purpose — so the heading and bold syntax stay visible and copyable rather than rendering as formatting.

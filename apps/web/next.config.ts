@@ -12,6 +12,22 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: new URL('../../', import.meta.url).pathname,
   // Prisma must not be bundled into server components; it loads native engines.
   serverExternalPackages: ['@prisma/client'],
+
+  // `calendar-core` writes its internal imports with `.js` extensions so the
+  // renderer can compile the same source and run it under Node, which requires
+  // explicit extensions (ESM). TypeScript and Vitest resolve those back to `.ts`
+  // on their own; webpack does not, so it is told to.
+  webpack: (config) => {
+    config.resolve.extensionAlias = {
+      ...config.resolve.extensionAlias,
+      '.js': ['.ts', '.tsx', '.js'],
+    };
+    return config;
+  },
+
+  turbopack: {
+    resolveExtensions: ['.ts', '.tsx', '.js', '.jsx', '.mdx', '.json'],
+  },
 };
 
 const withMDX = createMDX({});

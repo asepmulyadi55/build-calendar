@@ -25,7 +25,10 @@ function heic(brand = 'heic'): Uint8Array {
   const buffer = new Uint8Array(64);
   buffer.set([0x00, 0x00, 0x00, 0x18], 0); // box size
   buffer.set([0x66, 0x74, 0x79, 0x70], 4); // ftyp
-  buffer.set([...brand].map((c) => c.charCodeAt(0)), 8);
+  buffer.set(
+    [...brand].map((c) => c.charCodeAt(0)),
+    8,
+  );
   return buffer;
 }
 

@@ -6,8 +6,14 @@
     "moduleResolution": "nodenext",
     "outDir": "dist",
     "declaration": false,
-    "sourceMap": true
+    "sourceMap": true,
+    // `calendar-core` ships raw TypeScript so the editor and the renderer read the
+    // same source (AR-01). Node cannot import a .ts file, so the renderer's build
+    // compiles that source into its own dist rather than depending on a published
+    // artefact. `rootDir` spans both, which is why the entrypoint lives at
+    // dist/apps/renderer/src/index.js — see infra/Dockerfile.renderer.
+    "rootDir": "../.."
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test.ts"]
+  "include": ["src/**/*.ts", "../../packages/calendar-core/src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts", "../../packages/calendar-core/src/**/*.test.ts"]
 }
